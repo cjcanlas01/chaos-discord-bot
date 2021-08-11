@@ -1,14 +1,13 @@
 {
-  "name": "star-luna",
+  "name": "chaos-discord-bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "Personal discord bot project.",
   "main": "src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/app.js --config nodemon.json"
   },
   "keywords": [],
-  "author": "",
+  "author": "dev.cjcanlas@gmail.com",
   "license": "ISC",
   "dependencies": {
     "@discordjs/builders": "^0.5.0",
