@@ -9,9 +9,10 @@ const config = require("../../config.json");
  * Find all commands then bootstrap all of it bot
  *
  * @param {callback} action
+ * @param {string} dirPath
  */
-const bootstrapCommands = (action) => {
-  const commandPath = generatePath("../commands");
+const bootstrapCommands = (action, dirPath) => {
+  const commandPath = generatePath(dirPath);
   const commandFiles = fs
     .readdirSync(commandPath)
     .filter((file) => file.endsWith(".js"));
@@ -52,7 +53,7 @@ const bootstrapSlashCommands = (commands) => {
 /**
  * Start discord bot
  *
- * @param {Discord Client} client
+ * @param {Client} client
  */
 const bootstrapDiscordBot = (client) => {
   client.on("ready", () => {
@@ -61,20 +62,32 @@ const bootstrapDiscordBot = (client) => {
   });
 
   client.on("interactionCreate", async (interaction) => {
-    if (!interaction.isCommand()) return;
-    if (!client.commands.has(interaction.commandName)) return;
-    try {
-      await client.commands.get(interaction.commandName).execute(interaction);
-    } catch (error) {
-      console.error(error);
-      await interaction.reply({
-        content: "There was an error while executing this command!",
-        ephemeral: true,
-      });
-    }
+    slashInteractions(client, interaction);
+    buttonInteractions(client, interaction);
   });
 
   client.login(BOT_TOKEN);
+};
+
+const { interactionHandler } = require("./discord");
+
+const slashInteractions = (client, interaction) => {
+  if (interaction.isCommand()) {
+    if (!client.commands.has(interaction.commandName)) return;
+    interactionHandler(async function () {
+      await client.commands.get(interaction.commandName).execute(interaction);
+    }, interaction);
+  }
+};
+
+const buttonInteractions = (client, interaction) => {
+  if (interaction.isButton()) {
+    const commandName = interaction.customId;
+    if (!client.buttons.has(commandName)) return;
+    interactionHandler(async function () {
+      await client.buttons.get(commandName).execute(interaction);
+    }, interaction);
+  }
 };
 
 module.exports = {
