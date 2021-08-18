@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const Interaction = require("../utils/interaction");
 const Queue = require("../utils/queue");
 const { FARM_TITLES, ATK_TITLES } = require("../utils/constant");
+const { generateOptions } = require("../utils/utils");
 
 /**
  * Return template message for officer
@@ -22,11 +23,9 @@ const notifyOfficer = (role, title, name) => {
  * @returns {array}
  */
 const generateCommands = (collection) => {
-  const commands = [];
-  for (const [key, value] of Object.entries(collection)) {
-    commands.push([value, key]);
-  }
-  return commands;
+  return generateOptions(collection, (key, value) => {
+    return [value, key];
+  });
 };
 
 /**
