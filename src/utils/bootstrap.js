@@ -63,7 +63,7 @@ const bootstrapDiscordBot = (client) => {
 
   client.on("interactionCreate", async (interaction) => {
     slashInteractions(client, interaction);
-    buttonInteractions(client, interaction);
+    // buttonInteractions(client, interaction);
   });
 
   client.login(BOT_TOKEN);

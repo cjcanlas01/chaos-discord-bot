@@ -25,7 +25,19 @@ module.exports = class Interaction {
    * @returns {Interaction}
    */
   getGuild() {
-    this.this.instance = this.instance.member.guild;
+    this.instance = this.instance.member.guild;
+    return this;
+  }
+
+  /**
+   * Get GuildMemberRoleManager object
+   * - Manages API methods for roles of a GuildMember and stores their cache
+   * - Reference: https://discord.js.org/#/docs/main/stable/class/GuildMemberRoleManager
+   *
+   * @returns {Interaction}
+   */
+  getGuildMemberRoleManager() {
+    this.instance = this.instance.member.roles;
     return this;
   }
 
@@ -97,6 +109,16 @@ module.exports = class Interaction {
    */
   getRoleTag(role) {
     this.#reset(() => this.getRoleManager().#find("name", role).toString());
+    return this.final;
+  }
+
+  /**
+   * Get guild ID
+   *
+   * @returns {string}
+   */
+  getGuildId() {
+    this.#reset(() => this.instance.guildId);
     return this.final;
   }
 

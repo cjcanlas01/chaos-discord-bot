@@ -5,7 +5,8 @@ const { QUEUE } = require("../utils/constant");
 module.exports = class Queue {
   constructor(interaction) {
     this.action = new Interaction(interaction);
-    this.channel = "title-queue";
+    this.queueChannel = "title-queue";
+    this.requestChannel = "buff-requests";
     this.officerRole = "Protocol Officer";
     this.header = "K65 TITLE BUFF QUEUE";
     this.EMPTY = "[EMPTY]";
@@ -17,7 +18,7 @@ module.exports = class Queue {
    * @returns {object}
    */
   getChannel() {
-    return this.action.getGuildChannelManager().findByName(this.channel);
+    return this.action.getGuildChannelManager().findByName(this.queueChannel);
   }
 
   /**
@@ -140,6 +141,32 @@ module.exports = class Queue {
     const officers = this.action.findUsersWithRole(this.officerRole);
     if (officers.size <= 0) return false;
     return true;
+  }
+
+  /**
+   * Check if user executing command has officer role
+   *
+   * @returns {boolean}
+   */
+  checkUserIsOfficer() {
+    const hasRole = this.action
+      .getGuildMemberRoleManager()
+      .findByName(this.officerRole);
+    if (typeof hasRole == "object") {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Check if the channel that the interaction came from is request channel
+   *
+   * @returns {boolean}
+   */
+  async checkIfBuffRequestsChannel() {
+    const channel = await this.action.getCurrentChannel();
+    if (channel.name == this.requestChannel) return true;
+    return false;
   }
 
   /**

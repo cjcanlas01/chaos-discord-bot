@@ -16,9 +16,9 @@ bootstrapCommands(function (command) {
   client.commands.set(command.data.name, command);
 }, "../commands");
 
-bootstrapCommands(function (command) {
-  client.buttons.set(command.name, command);
-}, "../interactions/button");
+// bootstrapCommands(function (command) {
+//   client.buttons.set(command.name, command);
+// }, "../interactions/button");
 
 bootstrapSlashCommands(commands);
 bootstrapDiscordBot(client);
