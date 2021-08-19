@@ -137,4 +137,14 @@ module.exports = {
     DRAGON_RALLIES: "DragonRallies",
     CAMP_RALLIES: "CampRallies",
   },
+  BANKS: {
+    IRONBANK: {
+      transport_tax: 7,
+      transport_amount: 6760000,
+    },
+    BBLUVSYOU: {
+      transport_tax: 7,
+      transport_amount: 6440000,
+    },
+  },
 };
