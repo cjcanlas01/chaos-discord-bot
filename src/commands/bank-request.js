@@ -1,7 +1,11 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const Interaction = require("../utils/interaction");
 const { BANKS } = require("../utils/constant");
-const { generateOptions, computeRequestCount } = require("../utils/utils");
+const {
+  generateOptions,
+  computeRequestCount,
+  postSelf,
+} = require("../utils/utils");
 const { embed } = require("../utils/discord");
 
 // Generate options
@@ -75,6 +79,7 @@ module.exports = {
     const request = action.getOptions().getString("request");
     const { status, requests } = parseRequest(request);
     const bankDetails = BANKS[bank];
+
     if (status) {
       const result = processRequest(bankDetails, requests);
       if (typeof result == "object") {
@@ -85,10 +90,10 @@ module.exports = {
         });
       }
     } else {
-      interaction.reply({
-        content: "Something went wrong with processing your request.",
-        ephemeral: true,
-      });
+      postSelf(
+        interaction,
+        "Something went wrong with processing your request."
+      );
     }
   },
 };

@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const Queue = require("../utils/queue");
+const { postSelf } = require("../utils/utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -8,9 +9,6 @@ module.exports = {
   async execute(interaction) {
     const queue = new Queue(interaction);
     await queue.resetQueue();
-    interaction.reply({
-      content: "Queue has been cleared.",
-      ephemeral: true,
-    });
+    postSelf(interaction, "Queue has been cleared.");
   },
 };

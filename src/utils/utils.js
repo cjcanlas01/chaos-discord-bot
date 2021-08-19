@@ -70,7 +70,34 @@ const computeRequestCount = (bankDetail, resourceCount) => {
   }
 };
 
+/**
+ * Send interaction reply
+ *
+ * @param {object} interaction
+ * @param {string} content
+ */
+const post = (interaction, content) => {
+  interaction.reply({
+    content,
+  });
+};
+
+/**
+ * Send interaction reply with ephemeral
+ *
+ * @param {object} interaction
+ * @param {string} content
+ */
+const postSelf = (interaction, content) => {
+  interaction.reply({
+    content,
+    ephemeral: true,
+  });
+};
+
 module.exports = {
   generateOptions,
   computeRequestCount,
+  post,
+  postSelf,
 };

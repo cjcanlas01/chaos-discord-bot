@@ -208,4 +208,13 @@ module.exports = class Queue {
       return title;
     });
   }
+
+  /**
+   * Get buff mode id for keyv record
+   *
+   * @returns {string}
+   */
+  getBuffModeId() {
+    return `${this.action.getGuildId()}_BUFF_MODE`;
+  }
 };

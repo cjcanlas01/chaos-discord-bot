@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const Interaction = require("../utils/interaction");
+const { post } = require("../utils/utils");
 
 const computeNeededMaterials = (quantity, quality) => {
   let computedQty;
@@ -50,6 +51,6 @@ module.exports = {
     const action = new Interaction(interaction);
     const quantity = action.getOptions().getInteger("quantity");
     const quality = action.getOptions().getString("quality");
-    await interaction.reply(computeNeededMaterials(quantity, quality));
+    post(interaction, computeNeededMaterials(quantity, quality));
   },
 };
