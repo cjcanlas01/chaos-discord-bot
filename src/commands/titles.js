@@ -114,39 +114,43 @@ module.exports = {
   async execute(interaction) {
     const queue = new Queue(interaction);
     const action = new Interaction(interaction);
+    const isOfficerOnline = await queue.isOfficerOnline();
     const { status, title, username } = {
       ...(await requestDetails(action, queue)),
     };
-    const isOfficerOnline = queue.isOfficerOnline();
+    const {
+      NO_OFFICER_IN_SESSION,
+      PLAYER_IN_QUEUE,
+      PLAYER_REMOVED_IN_QUEUE,
+      PLAYER_NOT_IN_QUEUE,
+      PVP_TITLES_NOT_AVAILABLE,
+    } = { ...queue.MESSAGES };
 
     if (!isOfficerOnline) {
-      postSelf(
-        interaction,
-        "No Protocol Officer online. Please try again later."
-      );
+      postSelf(interaction, NO_OFFICER_IN_SESSION);
       return;
     }
 
     switch (status) {
       case "request":
-        const role = await queue.getOfficerRole();
+        const role = await queue.getTaggableOfficerRole();
         const isAdded = await queue.addPlayerInQueue(title, username);
         if (isAdded) {
           post(interaction, notifyOfficer(role, title, username));
         } else {
-          postSelf(interaction, `\`${username}\` is already in a queue.`);
+          post(interaction, PLAYER_IN_QUEUE(username));
         }
         break;
       case "done":
         const isRemoved = await queue.removePlayerInQueue(username);
         if (isRemoved) {
-          postSelf(interaction, `\`${username}\` is removed from the queue.`);
+          postSelf(interaction, PLAYER_REMOVED_IN_QUEUE(username));
         } else {
-          postSelf(interaction, `\`${username}\` is not in a queue.`);
+          postSelf(interaction, PLAYER_NOT_IN_QUEUE(username));
         }
         break;
       case "unavailable":
-        postSelf(interaction, "PVP titles are not available.");
+        postSelf(interaction, PVP_TITLES_NOT_AVAILABLE);
     }
   },
 };

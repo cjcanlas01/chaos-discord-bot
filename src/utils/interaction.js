@@ -113,6 +113,17 @@ module.exports = class Interaction {
   }
 
   /**
+   * Get role ID
+   *
+   * @param {string} role
+   * @returns {string}
+   */
+  getRoleId(role) {
+    this.#reset(() => this.getRoleManager().#find("name", role).id);
+    return this.final;
+  }
+
+  /**
    * Get guild ID
    *
    * @returns {string}
@@ -140,11 +151,11 @@ module.exports = class Interaction {
    * @param {string} role
    * @returns {object}
    */
-  findUsersWithRole(role) {
-    const memberManager = this.getGuildMemberManager().this();
+  async findUsersWithRole(role) {
+    const memberManager = await this.getGuildMemberManager().this().fetch();
     this.#reset(() => {
-      return memberManager.cache.filter((member) => {
-        return member.roles.cache.find((memberRole) => memberRole.name == role);
+      return memberManager.filter((member) => {
+        return member.roles.cache.has(this.getRoleId(role));
       });
     });
     return this.final;
