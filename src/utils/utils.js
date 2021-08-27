@@ -95,9 +95,16 @@ const postSelf = (interaction, content) => {
   });
 };
 
+/**
+ * Check if array is empty
+ * @param {array} arr
+ */
+const isArrayEmpty = (arr) => Array.isArray(arr) && arr.length === 0;
+
 module.exports = {
   generateOptions,
   computeRequestCount,
-  post,
+  isArrayEmpty,
   postSelf,
+  post,
 };
