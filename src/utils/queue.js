@@ -11,10 +11,11 @@ const MESSAGES = {
   STOP_PO:
     "The Protocole officer is leaving, the buffs will not be available until another one take the role. Thank you ! https://static.wixstatic.com/media/3bd738_28c4b141811146a9b8d86c05d224b079~mv2.jpg/v1/fill/w_569,h_427,al_c,q_80/madclosed_copy.webp",
   INACTIVE_OFFICER_IN_SESSION:
-    "There is a Protocol officer in session, if he/ she may seem inactive, execute `/po replace` to get the role. Thank you !",
+    "There is a Protocol officer in session, if he/ she may seem inactive, execute `/po options: replace` to get the role. Thank you !",
   CURRENT_OFFICER_REPLACED: (username) =>
     `NOW! The Protocol officer has been replaced. New Protocol officer is ${username.toString()}.`,
-  SAME_OFFICER_IN_SESSION: "You shall not pass! Use `/po stop` instead.",
+  SAME_OFFICER_IN_SESSION:
+    "You shall not pass! Use `/po options: stop` instead.",
   PLAYER_IN_QUEUE: (username) => `\`${username}\` is already in a queue.`,
   PLAYER_REMOVED_IN_QUEUE: (username) =>
     `\`${username}\` is removed from the queue.`,

@@ -3,6 +3,10 @@ const Interaction = require("../utils/interaction");
 const Queue = require("../utils/queue");
 const { post, postSelf } = require("../utils/utils");
 
+const processProtocolOfficer = async (callback) => {
+  return callback();
+};
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("po")
@@ -44,43 +48,41 @@ module.exports = {
 
     switch (options) {
       case "start":
-        if (isOfficerOnline) {
-          postSelf(interaction, OFFICER_IN_SESSION);
-          return;
-        }
-        await queue.addProtocolOfficerRole();
-        post(interaction, START_PO);
+        const startMessage = isOfficerOnline
+          ? OFFICER_IN_SESSION
+          : await processProtocolOfficer(() => {
+              queue.addProtocolOfficerRole();
+              return START_PO;
+            });
+        post(interaction, startMessage);
         break;
       case "stop":
         if (isOfficerOnline) {
-          const isSameUser =
-            await queue.checkCurrentOfficerIsSameAsRequestingOfficer();
-          if (isSameUser) {
-            await queue.removeProtocolOfficerRole();
-            post(interaction, STOP_PO);
-          } else {
-            postSelf(interaction, INACTIVE_OFFICER_IN_SESSION);
-          }
-        } else {
-          postSelf(interaction, NO_OFFICER_IN_SESSION);
+          const stopMessage =
+            (await queue.checkCurrentOfficerIsSameAsRequestingOfficer())
+              ? await processProtocolOfficer(() => {
+                  queue.removeProtocolOfficerRole();
+                  return STOP_PO;
+                })
+              : INACTIVE_OFFICER_IN_SESSION;
+          post(interaction, stopMessage);
+          return;
         }
+        postSelf(interaction, NO_OFFICER_IN_SESSION);
         break;
       case "replace":
         if (isOfficerOnline) {
-          const isSameUser =
-            await queue.checkCurrentOfficerIsSameAsRequestingOfficer();
-          if (!isSameUser) {
-            await queue.replaceProtocolOfficer();
-            post(
-              interaction,
-              CURRENT_OFFICER_REPLACED(action.getUser().this())
-            );
-          } else {
-            postSelf(interaction, SAME_OFFICER_IN_SESSION);
-          }
-        } else {
-          postSelf(interaction, NO_OFFICER_IN_SESSION);
+          const replaceMessage =
+            !(await queue.checkCurrentOfficerIsSameAsRequestingOfficer())
+              ? await processProtocolOfficer(() => {
+                  queue.replaceProtocolOfficer();
+                  return CURRENT_OFFICER_REPLACED(action.getUser().this());
+                })
+              : SAME_OFFICER_IN_SESSION;
+          post(interaction, replaceMessage);
+          return;
         }
+        postSelf(interaction, NO_OFFICER_IN_SESSION);
         break;
     }
   },

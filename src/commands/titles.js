@@ -135,19 +135,18 @@ module.exports = {
       case "request":
         const role = await queue.getTaggableOfficerRole();
         const isAdded = await queue.addPlayerInQueue(title, username);
-        if (isAdded) {
-          post(interaction, notifyOfficer(role, title, username));
-        } else {
-          post(interaction, PLAYER_IN_QUEUE(username));
-        }
+        const requestMessage = isAdded
+          ? notifyOfficer(role, title, username)
+          : PLAYER_IN_QUEUE(username);
+        post(interaction, requestMessage);
         break;
       case "done":
         const isRemoved = await queue.removePlayerInQueue(username);
-        if (isRemoved) {
-          postSelf(interaction, PLAYER_REMOVED_IN_QUEUE(username));
-        } else {
-          postSelf(interaction, PLAYER_NOT_IN_QUEUE(username));
-        }
+        const doneMessage = isRemoved
+          ? PLAYER_REMOVED_IN_QUEUE(username)
+          : PLAYER_NOT_IN_QUEUE(username);
+        postSelf(interaction, doneMessage);
+
         break;
       case "unavailable":
         postSelf(interaction, PVP_TITLES_NOT_AVAILABLE);
