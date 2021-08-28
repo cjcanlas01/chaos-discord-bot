@@ -5,7 +5,7 @@ const { postSelf } = require("../utils/utils");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("reset-queue")
-    .setDescription("Request a title from Protocol Officer."),
+    .setDescription("Reset queue in title-queue channel."),
   async execute(interaction) {
     const queue = new Queue(interaction);
     await queue.resetQueue();

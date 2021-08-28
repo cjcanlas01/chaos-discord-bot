@@ -28,7 +28,7 @@ const computeNeededMaterials = (quantity, quality) => {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("material")
-    .setDescription("Compute how much material need for quality specified.")
+    .setDescription("Compute how much material needed for quality specified.")
     .addIntegerOption((option) =>
       option
         .setName("quantity")

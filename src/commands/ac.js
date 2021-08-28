@@ -7,11 +7,11 @@ const { post, postSelf } = require("../utils/utils");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("ac")
-    .setDescription("Protocol Officer commands.")
+    .setDescription("Enable/ disable attack titles for requesting.")
     .addStringOption((option) =>
       option
         .setName("options")
-        .setDescription("Protocol Officer command options.")
+        .setDescription("Enable/ disable attack titles.")
         .setRequired(true)
         .addChoices([
           ["mode", "mode"],

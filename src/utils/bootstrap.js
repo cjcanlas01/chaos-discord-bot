@@ -4,6 +4,7 @@ const { Routes } = require("discord-api-types/v9");
 const { generatePath } = require("./path");
 const { BOT_TOKEN, CLIENT_ID } = require("../config");
 const config = require("../../config.json");
+const { isArrayEmpty } = require("../utils/utils");
 
 /**
  * Find all commands then bootstrap all of it bot
@@ -28,7 +29,7 @@ const bootstrapCommands = (action, dirPath) => {
  *
  * @param {array} commands
  */
-const bootstrapSlashCommands = (commands) => {
+const bootstrapSlashCommands = (commandsList) => {
   const rest = new REST({ version: "9" }).setToken(BOT_TOKEN);
   (async () => {
     try {
@@ -36,7 +37,12 @@ const bootstrapSlashCommands = (commands) => {
 
       const { GUILDS } = { ...config };
       for (const info of GUILDS) {
-        const { GUILD_ID } = { ...info };
+        const { GUILD_ID, COMMAND_FILTER } = { ...info };
+        const commands = isArrayEmpty(COMMAND_FILTER)
+          ? commandsList
+          : commandsList.filter(
+              (command) => !COMMAND_FILTER.includes(command.name)
+            );
         await rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), {
           body: commands,
         });

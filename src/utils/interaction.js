@@ -6,6 +6,17 @@ module.exports = class Interaction {
   }
 
   /**
+   * Get Client object
+   * - The main hub for interacting with the Discord API, and the starting point for any bot
+   * - Reference: https://discord.js.org/#/docs/main/stable/class/Client
+   * @returns {Interaction}
+   */
+  getClient() {
+    this.instance = this.instance.client;
+    return this;
+  }
+
+  /**
    * Get GuildMember object
    * - Represents a member of a guild on Discord
    * - Reference: https://discord.js.org/#/docs/main/stable/class/GuildMember
@@ -142,6 +153,16 @@ module.exports = class Interaction {
    */
   getOptions() {
     this.#reset(() => this.instance.options);
+    return this.final;
+  }
+
+  /**
+   * Get bot client commands
+   *
+   * @returns {object}
+   */
+  getClientCommands() {
+    this.#reset(() => this.instance.client.commands);
     return this.final;
   }
 

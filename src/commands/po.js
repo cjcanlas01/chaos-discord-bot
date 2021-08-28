@@ -10,11 +10,11 @@ const processProtocolOfficer = async (callback) => {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("po")
-    .setDescription("Protocol Officer commands.")
+    .setDescription("Protocol officer commands.")
     .addStringOption((option) =>
       option
         .setName("options")
-        .setDescription("Protocol Officer command options.")
+        .setDescription("Protocol officer command options.")
         .setRequired(true)
         .addChoices([
           ["start", "start"],
