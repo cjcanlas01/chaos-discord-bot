@@ -118,6 +118,7 @@ module.exports = {
     const { status, title, username } = {
       ...(await requestDetails(action, queue)),
     };
+    const isBuffRequestsChannel = await queue.checkIfBuffRequestsChannel();
     const {
       NO_OFFICER_IN_SESSION,
       PLAYER_IN_QUEUE,
@@ -128,6 +129,11 @@ module.exports = {
 
     if (!isOfficerOnline) {
       postSelf(interaction, NO_OFFICER_IN_SESSION);
+      return;
+    }
+
+    if (!isBuffRequestsChannel) {
+      postSelf(interaction, "Warning! Cannot execute command here.");
       return;
     }
 

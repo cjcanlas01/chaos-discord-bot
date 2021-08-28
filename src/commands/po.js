@@ -28,6 +28,7 @@ module.exports = {
     const isOfficerOnline = await queue.isOfficerOnline();
     const userHasAccess = queue.checkUserHasPoAccess();
     const options = action.getOptions().getString("options");
+    const isBuffRequestsChannel = await queue.checkIfBuffRequestsChannel();
     const {
       NO_ACCESS_ROLE,
       OFFICER_IN_SESSION,
@@ -40,6 +41,11 @@ module.exports = {
     } = {
       ...queue.MESSAGES,
     };
+
+    if (!isBuffRequestsChannel) {
+      postSelf(interaction, "Warning! Cannot execute command here.");
+      return;
+    }
 
     if (!userHasAccess) {
       postSelf(interaction, NO_ACCESS_ROLE);
