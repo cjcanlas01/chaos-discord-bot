@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { BANNERS, ROLES } = require("../utils/constant");
+const { BANNERS } = require("../utils/constant");
 const Interaction = require("../utils/interaction");
 const { generatePath } = require("../utils/path");
 const { generateOptions } = require("../utils/utils");
@@ -17,6 +17,7 @@ const identifyRole = (role, action) => {
     return `@${role.toLowerCase()}`;
   }
 
+  const ROLES = action.getBotConfigs();
   return action.getRoleTag(ROLES[role]);
 };
 

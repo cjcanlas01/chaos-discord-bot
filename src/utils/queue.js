@@ -26,11 +26,20 @@ const MESSAGES = {
 module.exports = class Queue {
   constructor(interaction) {
     this.action = new Interaction(interaction);
-    this.queueChannel = "title-queue";
-    this.requestChannel = "buff-requests";
-    this.officerRole = "Protocol Officer";
-    this.officerAccessRole = "poaccess";
-    this.header = "K65 TITLE BUFF QUEUE";
+    const {
+      QUEUE_CHANNEL,
+      BUFF_CHANNEL,
+      PO_ROLE,
+      PO_ACCESS_ROLE,
+      BUFF_QUEUE_HEADER,
+    } = {
+      ...this.action.getBotConfigs(),
+    };
+    this.queueChannel = QUEUE_CHANNEL;
+    this.requestChannel = BUFF_CHANNEL;
+    this.officerRole = PO_ROLE;
+    this.officerAccessRole = PO_ACCESS_ROLE;
+    this.header = BUFF_QUEUE_HEADER;
     this.EMPTY = "[EMPTY]";
     this.MESSAGES = MESSAGES;
   }

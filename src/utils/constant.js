@@ -129,22 +129,4 @@ module.exports = {
       role: "EVERYONE",
     },
   },
-  ROLES: {
-    PO_ACCESS_ROLE: "poaccess",
-    PO_ROLE: "Protocol Officer",
-    RALLY_LEADER_ROLE: "Rally Leader",
-    BANK_ROLE: "Bank",
-    DRAGON_RALLIES: "DragonRallies",
-    CAMP_RALLIES: "CampRallies",
-  },
-  BANKS: {
-    IRONBANK: {
-      transport_tax: 7,
-      transport_amount: 6760000,
-    },
-    BBLUVSYOU: {
-      transport_tax: 7,
-      transport_amount: 6440000,
-    },
-  },
 };

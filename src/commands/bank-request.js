@@ -1,17 +1,11 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const Interaction = require("../utils/interaction");
-const { BANKS } = require("../utils/constant");
 const {
   generateOptions,
   computeRequestCount,
   postSelf,
 } = require("../utils/utils");
 const { embed } = require("../utils/discord");
-
-// Generate options
-const generatedOptions = generateOptions(BANKS, (key) => {
-  return [key, key];
-});
 
 /**
  * Parse request of user and identify if its correct

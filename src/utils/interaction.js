@@ -167,6 +167,24 @@ module.exports = class Interaction {
   }
 
   /**
+   * Get bot's config collection
+   *
+   * @returns {object}
+   */
+  getBotConfigs() {
+    const config = this.instance.client.configs;
+    this.#reset(() =>
+      Array.from(config).reduce((acc, cur) => {
+        return {
+          ...acc,
+          [cur[0]]: cur[1],
+        };
+      }, {})
+    );
+    return this.final;
+  }
+
+  /**
    * Find all users with specified role
    *
    * @param {string} role
