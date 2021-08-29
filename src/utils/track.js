@@ -22,6 +22,7 @@ module.exports = class Watch {
       where: {
         playerId,
       },
+      raw: true,
     });
   }
 
@@ -33,6 +34,7 @@ module.exports = class Watch {
   async getWatchRecords() {
     return await db.Alts.findAll({
       attributes: ["playerId", "alts"],
+      raw: true,
     });
   }
 
@@ -44,7 +46,7 @@ module.exports = class Watch {
   async parseWatchRecords() {
     const records = await this.getWatchRecords();
     return records.map((alt) => {
-      const { playerId, alts } = { ...alt.dataValues };
+      const { playerId, alts } = { ...alt };
       return {
         playerId,
         alts: new Set(alts.split(",").map((name) => name.trim().toLowerCase())),
@@ -77,7 +79,7 @@ module.exports = class Watch {
    */
   async printWatchList(user) {
     const watchData = await this.getUserWatchList(user.id);
-    const list = !isArrayEmpty(watchData) ? watchData[0].dataValues.alts : null;
+    const list = !isArrayEmpty(watchData) ? watchData[0].alts : null;
     return list
       ? `${user.toString()}, your current watch list is: ${list}`
       : `Seems I can't find your watch list, have you added any characters yet?`;

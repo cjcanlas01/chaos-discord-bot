@@ -64,7 +64,6 @@ module.exports = {
       option
         .setName("bank")
         .setDescription("This is our banks!")
-        .addChoices(generatedOptions)
         .setRequired(true)
     )
     .addStringOption((option) =>
@@ -78,7 +77,8 @@ module.exports = {
     const bank = action.getOptions().getString("bank");
     const request = action.getOptions().getString("request");
     const { status, requests } = parseRequest(request);
-    const bankDetails = BANKS[bank];
+    const banks = action.getClient().this().banks;
+    const bankDetails = banks.get(bank);
 
     if (status) {
       const result = processRequest(bankDetails, requests);

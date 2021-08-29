@@ -5,6 +5,44 @@ const { generatePath } = require("./path");
 const { BOT_TOKEN, CLIENT_ID } = require("../config");
 const config = require("../../config.json");
 const { isArrayEmpty } = require("../utils/utils");
+const DB = require("../utils/db");
+
+/**
+ * Save database config records to discord collection
+ *
+ * @param {Client} client
+ */
+const bootstrapBotConfigs = async (client) => {
+  const db = new DB();
+  const bank = await db.getBankLists();
+  const welcomeMessages = await db.getWelcomeMessagesList();
+  const configs = await db.getConfigList();
+
+  client.banks.clear();
+  client.welcomeMessages.clear();
+  client.configs.clear();
+
+  bank.forEach((value) => {
+    const { name, transport_tax, transport_amount } = { ...value };
+    client.banks.set(name, {
+      transport_tax,
+      transport_amount,
+    });
+  });
+
+  welcomeMessages.forEach((value) => {
+    const { guild, channel, message } = { ...value };
+    client.welcomeMessages.set(guild, {
+      channel,
+      message,
+    });
+  });
+
+  configs.forEach((record) => {
+    const { config, value } = { ...record };
+    client.configs.set(config, value);
+  });
+};
 
 /**
  * Find all commands then bootstrap all of it bot
@@ -12,7 +50,7 @@ const { isArrayEmpty } = require("../utils/utils");
  * @param {callback} action
  * @param {string} dirPath
  */
-const bootstrapCommands = (action, dirPath) => {
+const bootstrapCommands = async (action, dirPath) => {
   const commandPath = generatePath(dirPath);
   const commandFiles = fs
     .readdirSync(commandPath)
@@ -20,7 +58,7 @@ const bootstrapCommands = (action, dirPath) => {
 
   for (const file of commandFiles) {
     const command = require(`${commandPath}/${file}`);
-    action(command);
+    await action(command);
   }
 };
 
@@ -96,8 +134,35 @@ const buttonInteractions = (client, interaction) => {
   }
 };
 
+/**
+ * Update commands with dynamic options
+ *
+ * @param {object} command
+ * @returns {object}
+ */
+const updateCommandOptions = async (command) => {
+  const db = new DB();
+  switch (command.name) {
+    case "bank-request":
+      const option = command.options.find((option) => option.name == "bank");
+      const banks = await db.getBankLists();
+      const banksOption = banks.map((bank) => {
+        const { name } = { ...bank };
+        return {
+          name,
+          value: name,
+        };
+      });
+      option.choices = banksOption;
+      return command;
+  }
+  return command;
+};
+
 module.exports = {
   bootstrapCommands,
   bootstrapSlashCommands,
   bootstrapDiscordBot,
+  bootstrapBotConfigs,
+  updateCommandOptions,
 };
