@@ -4,8 +4,9 @@ const { Routes } = require("discord-api-types/v9");
 const { generatePath } = require("./path");
 const { BOT_TOKEN, CLIENT_ID } = require("../config");
 const config = require("../../config.json");
-const { isArrayEmpty } = require("../utils/utils");
+const { isArrayEmpty, stringInject } = require("../utils/utils");
 const DB = require("../utils/db");
+const Interaction = require("../utils/interaction");
 
 /**
  * Save database config records to discord collection
@@ -31,8 +32,8 @@ const bootstrapBotConfigs = async (client) => {
   });
 
   welcomeMessages.forEach((value) => {
-    const { guild, channel, message } = { ...value };
-    client.welcomeMessages.set(guild, {
+    const { guildId, channel, message } = { ...value };
+    client.welcomeMessages.set(guildId, {
       channel,
       message,
     });
@@ -110,6 +111,10 @@ const bootstrapDiscordBot = (client) => {
     // buttonInteractions(client, interaction);
   });
 
+  client.on("guildMemberAdd", (member) => {
+    displayWelcomeMessage(member);
+  });
+
   client.login(BOT_TOKEN);
 };
 
@@ -157,6 +162,23 @@ const updateCommandOptions = async (command) => {
       return command;
   }
   return command;
+};
+
+/**
+ * Display welcome message on guildMemberAdd event
+ *
+ * @param {object} member
+ */
+const displayWelcomeMessage = (member) => {
+  const guild = member.guild;
+  const action = new Interaction(member);
+  const { channel, message } = action
+    .getClient()
+    .this()
+    .welcomeMessages.get(guild.id);
+  const welcomeChannel = guild.channels.cache.find((ch) => ch.name == channel);
+  const welcomeMessage = stringInject(message, [member.toString()]);
+  welcomeChannel.send(welcomeMessage);
 };
 
 module.exports = {

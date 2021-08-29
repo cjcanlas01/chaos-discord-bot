@@ -101,10 +101,21 @@ const postSelf = (interaction, content) => {
  */
 const isArrayEmpty = (arr) => Array.isArray(arr) && arr.length === 0;
 
+const stringInject = (str, arr) => {
+  if (typeof str !== "string" || !(arr instanceof Array)) {
+    return false;
+  }
+
+  return str.replace(/({\d})/g, function (i) {
+    return arr[i.replace(/{/, "").replace(/}/, "")];
+  });
+};
+
 module.exports = {
   generateOptions,
   computeRequestCount,
   isArrayEmpty,
+  stringInject,
   postSelf,
   post,
 };

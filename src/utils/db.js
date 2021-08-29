@@ -19,7 +19,7 @@ module.exports = class DB {
 
   async getWelcomeMessagesList() {
     return await db.WelcomeMessage.findAll({
-      attributes: ["guild", "channel", "message"],
+      attributes: ["guildId", "channel", "message"],
       raw: true,
     });
   }
