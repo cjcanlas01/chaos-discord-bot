@@ -6,7 +6,7 @@ const {
   bootstrapBotConfigs,
   bootstrapSlashCommands,
 } = require("../utils/bootstrap");
-const { postSelf } = require("../utils/utils");
+const { postSelf, checkIfUserIsAllowed } = require("../utils/utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -16,6 +16,15 @@ module.exports = {
     const action = new Interaction(interaction);
     const client = action.getClient().this();
     const commands = [];
+    const isUserAllowed = await checkIfUserIsAllowed(action);
+
+    if (!isUserAllowed) {
+      await interaction.reply({
+        content: "Warning! You have no permission for this command.",
+        ephemeral: true,
+      });
+      return;
+    }
 
     await bootstrapCommands(async function (command) {
       const updatedCommand = await updateCommandOptions(command.data.toJSON());
