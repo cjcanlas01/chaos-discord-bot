@@ -23,4 +23,21 @@ module.exports = class DB {
       raw: true,
     });
   }
+
+  async getWatchRecords() {
+    return await db.Alts.findAll({
+      attributes: ["playerId"],
+      raw: true,
+    });
+  }
+
+  async getConfig(config) {
+    return await db.Config.findOne({
+      where: {
+        config: config,
+      },
+      attributes: ["config", "value"],
+      raw: true,
+    });
+  }
 };

@@ -1,3 +1,23 @@
+const DB = require("../utils/db");
+
+/**
+ * Check if user executed command
+ * is included in allowed users list
+ *
+ * @param {Interaction} action
+ * @returns {boolean}
+ */
+const checkIfUserIsAllowed = async (action) => {
+  const db = new DB();
+  const ALLOWED_USERS = "ALLOWED_USERS";
+  const userId = action.getUser().this().id;
+  const { value } = await db.getConfig(ALLOWED_USERS);
+  const parsedUsers = value.split(",").map((value) => value.trim());
+
+  if (parsedUsers.includes(userId)) return true;
+  return false;
+};
+
 /**
  * Generate options for slash commands
  *
@@ -112,8 +132,9 @@ const stringInject = (str, arr) => {
 };
 
 module.exports = {
-  generateOptions,
+  checkIfUserIsAllowed,
   computeRequestCount,
+  generateOptions,
   isArrayEmpty,
   stringInject,
   postSelf,

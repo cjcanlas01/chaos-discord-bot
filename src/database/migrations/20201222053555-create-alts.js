@@ -12,6 +12,10 @@ module.exports = {
         unique: true,
         type: Sequelize.STRING,
       },
+      playerName: {
+        allowNull: true,
+        type: Sequelize.STRING,
+      },
       alts: {
         type: Sequelize.STRING,
       },
