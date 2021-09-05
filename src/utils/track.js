@@ -93,9 +93,11 @@ module.exports = class Watch {
    * @returns {string}
    */
   async updateOrInsert(user, args) {
+    const { id, username } = { ...user };
     const [, isCreated] = await db.Alts.upsert(
       {
-        playerId: user.id,
+        playerName: username,
+        playerId: id,
         alts: args,
       },
       {
