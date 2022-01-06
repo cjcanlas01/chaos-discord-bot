@@ -20,6 +20,7 @@ module.exports = {
           ["start", "start"],
           ["stop", "stop"],
           ["replace", "replace"],
+          ["reset-queue", "reset-queue"],
         ])
     ),
   async execute(interaction) {
@@ -89,6 +90,10 @@ module.exports = {
           return;
         }
         postSelf(interaction, NO_OFFICER_IN_SESSION);
+        break;
+      case "reset-queue":
+        await queue.resetQueue();
+        post(interaction, "Title queue has been cleared.");
         break;
     }
   },
