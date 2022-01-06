@@ -229,12 +229,19 @@ module.exports = class Interaction {
    *
    * @returns {string}
    */
-  async availableUserName() {
+  async availableUserName(taggedUser = false) {
     let instance;
-    const taggedUser = !this.getOptions()
-      ? false
-      : this.getOptions().getUser("user");
+    let identifiedUser;
+
     if (!taggedUser) {
+      identifiedUser = !this.getOptions()
+        ? false
+        : this.getOptions().getUser("user");
+    } else {
+      identifiedUser = taggedUser;
+    }
+
+    if (!identifiedUser) {
       instance = this.getGuildMember().this();
     } else {
       instance = await this.getGuildMemberManager().this().fetch(taggedUser);

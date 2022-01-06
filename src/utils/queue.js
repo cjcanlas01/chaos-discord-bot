@@ -327,4 +327,36 @@ module.exports = class Queue {
     await currentOfficerRoleManager.remove(officerRole);
     await replacingOfficerRoleManager.add(officerRole);
   }
+
+  /**
+   * Get requesting name based on input (castle name or discord tag)
+   *
+   * @returns {string}
+   */
+  async getRequestingName() {
+    const optionsToFilter = ["farm_titles", "atk_titles"];
+    const commandObject = this.action.getOptions().data;
+    const [commandDetails] = [...commandObject];
+    const { options } = { ...commandDetails };
+    const selectedOption =
+      options != undefined &&
+      options.filter((option) => !optionsToFilter.includes(option.name))[0];
+
+    let identifiedOption;
+    // If no discord_tag or castle_name selected
+    if (options == undefined || selectedOption == undefined) {
+      identifiedOption = "self";
+    } else {
+      identifiedOption = selectedOption.name;
+    }
+
+    switch (identifiedOption) {
+      case "discord_tag":
+        return this.action.availableUserName(selectedOption.user);
+      case "castle_name":
+        return selectedOption.value;
+      case "self":
+        return this.action.availableUserName();
+    }
+  }
 };

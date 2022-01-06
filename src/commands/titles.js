@@ -37,7 +37,7 @@ const generateCommands = (collection) => {
  */
 const requestDetails = async (action, queue) => {
   const titleCommand = action.getOptions().getSubcommand();
-  const username = await action.availableUserName();
+  const username = await queue.getRequestingName();
   const buffModeStatus = await keyv.get(queue.getBuffModeId());
   if (titleCommand == "farm") {
     return {
@@ -79,9 +79,10 @@ module.exports = {
             .addChoices(generateCommands(FARM_TITLES))
         )
         .addUserOption((option) =>
-          option
-            .setName("user")
-            .setDescription("User to give titles, defaults to self.")
+          option.setName("discord_tag").setDescription("Discord user tag.")
+        )
+        .addStringOption((option) =>
+          option.setName("castle_name").setDescription("Player in-game name.")
         )
     )
     .addSubcommand((subcommand) =>
@@ -96,9 +97,10 @@ module.exports = {
             .addChoices(generateCommands(ATK_TITLES))
         )
         .addUserOption((option) =>
-          option
-            .setName("user")
-            .setDescription("User to give titles, defaults to self.")
+          option.setName("discord_tag").setDescription("Discord user tag.")
+        )
+        .addStringOption((option) =>
+          option.setName("castle_name").setDescription("Player in-game name.")
         )
     )
     .addSubcommand((subcommand) =>
@@ -106,9 +108,10 @@ module.exports = {
         .setName("done")
         .setDescription("Use when you have completed using the title.")
         .addUserOption((option) =>
-          option
-            .setName("user")
-            .setDescription("User to give titles, defaults to self.")
+          option.setName("discord_tag").setDescription("Discord user tag.")
+        )
+        .addStringOption((option) =>
+          option.setName("castle_name").setDescription("Player in-game name.")
         )
     ),
   async execute(interaction) {
@@ -137,6 +140,11 @@ module.exports = {
       return;
     }
 
+    if (!username) {
+      postSelf(interaction, "Please enter a discord tag or castle name.");
+      return;
+    }
+
     switch (status) {
       case "request":
         const role = await queue.getTaggableOfficerRole();
@@ -151,8 +159,7 @@ module.exports = {
         const doneMessage = isRemoved
           ? PLAYER_REMOVED_IN_QUEUE(username)
           : PLAYER_NOT_IN_QUEUE(username);
-        postSelf(interaction, doneMessage);
-
+        post(interaction, doneMessage);
         break;
       case "unavailable":
         postSelf(interaction, PVP_TITLES_NOT_AVAILABLE);
