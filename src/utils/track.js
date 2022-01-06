@@ -1,5 +1,6 @@
 const db = require("../database/connection");
 const { isArrayEmpty } = require("../utils/utils");
+const { Op } = require("sequelize");
 
 module.exports = class Watch {
   constructor() {
@@ -27,48 +28,22 @@ module.exports = class Watch {
   }
 
   /**
-   * Get all watch records
-   *
-   * @returns {object}
-   */
-  async getWatchRecords() {
-    return await db.Alts.findAll({
-      attributes: ["playerId", "alts"],
-      raw: true,
-    });
-  }
-
-  /**
-   * Returns parsed watch records
-   *
-   * @returns {object}
-   */
-  async parseWatchRecords() {
-    const records = await this.getWatchRecords();
-    return records.map((alt) => {
-      const { playerId, alts } = { ...alt };
-      return {
-        playerId,
-        alts: new Set(alts.split(",").map((name) => name.trim().toLowerCase())),
-      };
-    });
-  }
-
-  /**
    * Find protectors of specified castle name
    *
    * @param {string} castleName
    * @returns {array}
    */
   async findProtectors(castleName) {
-    const parsedRecords = await this.parseWatchRecords();
-    return parsedRecords
-      .filter((players) => {
-        if (players.alts.has(castleName.trim().toLowerCase())) {
-          return true;
-        }
-      })
-      .map((user) => `<@${user.playerId}>`);
+    const listOfWatchers = await await db.Alts.findAll({
+      where: {
+        alts: {
+          [Op.like]: `%${castleName.trim().toLowerCase()}%`,
+        },
+      },
+      raw: true,
+    });
+
+    return listOfWatchers.map((user) => `<@${user.playerId}>`);
   }
 
   /**
