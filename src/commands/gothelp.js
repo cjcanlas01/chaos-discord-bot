@@ -5,8 +5,8 @@ const config = require("../../config.json");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("madhelp")
-    .setDescription("Display MAD bot commands."),
+    .setName("gothelp")
+    .setDescription("Display GOT bot commands."),
   async execute(interaction) {
     const action = new Interaction(interaction);
     const commands = action.getClientCommands();

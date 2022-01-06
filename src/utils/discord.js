@@ -23,8 +23,8 @@ const interactionHandler = async (action, interaction) => {
  * @returns {MessageEmbed}
  */
 const embed = (fields, title = null, footer = null) => {
-  title = !title ? "MAD IS HERE! HOW CAN I HELP?" : title;
-  footer = !footer ? "What is MAD may never die!" : footer;
+  title = !title ? "GOT IS HERE! HOW CAN I HELP?" : title;
+  footer = !footer ? "Developed by: Q Coldwater#1395" : footer;
   return new MessageEmbed()
     .setTitle(title)
     .setColor(0xff0000)
