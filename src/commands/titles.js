@@ -140,7 +140,7 @@ module.exports = {
       return;
     }
 
-    if (!username) {
+    if (status != "unavailable" && !username) {
       postSelf(interaction, "Please enter a discord tag or castle name.");
       return;
     }
