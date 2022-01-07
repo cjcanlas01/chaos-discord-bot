@@ -35,6 +35,10 @@ module.exports = {
         config: "BUFF_QUEUE_HEADER",
         value: "TITLE BUFF QUEUE",
       },
+      {
+        config: "ALLOWED_USERS",
+        value: null,
+      },
     ];
 
     return await queryInterface.bulkInsert("Configs", configs, {});

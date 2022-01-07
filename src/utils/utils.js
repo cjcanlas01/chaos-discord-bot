@@ -11,11 +11,11 @@ const checkIfUserIsAllowed = async (action) => {
   const db = new DB();
   const ALLOWED_USERS = "ALLOWED_USERS";
   const userId = action.getUser().this().id;
-  const { value } = await db.getConfig(ALLOWED_USERS);
+  const config = await db.getConfig(ALLOWED_USERS);
 
-  if (value == null) return false;
+  if (config == null) return false;
 
-  const parsedUsers = value.split(",").map((value) => value.trim());
+  const parsedUsers = config.value.split(",").map((value) => value.trim());
 
   if (parsedUsers.includes(userId)) return true;
   return false;
