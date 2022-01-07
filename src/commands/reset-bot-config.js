@@ -10,7 +10,7 @@ const { postSelf, checkIfUserIsAllowed } = require("../utils/utils");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("reset")
+    .setName("reset-bot-config")
     .setDescription("Reset bot commands and configs."),
   async execute(interaction) {
     const action = new Interaction(interaction);

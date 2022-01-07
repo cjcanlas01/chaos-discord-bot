@@ -102,7 +102,9 @@ const bootstrapSlashCommands = (commandsList) => {
  */
 const bootstrapDiscordBot = (client) => {
   client.on("ready", () => {
-    client.user.setActivity(`help`, { type: "LISTENING" });
+    client.user.setActivity(`${config.BOT.HELP_COMMAND}help`, {
+      type: "LISTENING",
+    });
     console.log(`Logged in as ${client.user.tag}!`);
   });
 

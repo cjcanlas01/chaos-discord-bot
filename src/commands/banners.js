@@ -49,7 +49,7 @@ const generatedOptions = generateOptions(BANNERS, (key, value) => {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("banners")
-    .setDescription("Display GOTWIC related banners.")
+    .setDescription("Display available guild banners.")
     .addStringOption((option) =>
       option
         .setName("options")

@@ -24,10 +24,6 @@ module.exports = {
         value: "Bank",
       },
       {
-        config: "MANAGEMENT_CHANNEL",
-        value: "bigmad-channel",
-      },
-      {
         config: "DRAGON_RALLIES",
         value: "DragonRallies",
       },
@@ -37,7 +33,7 @@ module.exports = {
       },
       {
         config: "BUFF_QUEUE_HEADER",
-        value: "K65 TITLE BUFF QUEUE",
+        value: "TITLE BUFF QUEUE",
       },
     ];
 

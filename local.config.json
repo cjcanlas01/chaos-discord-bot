@@ -6,5 +6,9 @@
       "COMMAND_FILTER": [],
       "WELCOME_MSG": false
     }
-  ]
+  ],
+  "BOT": {
+    "NAME": "",
+    "HELP_COMMAND": ""
+  }
 }
