@@ -3,7 +3,8 @@
     {
       "GUILD_NAME": "",
       "GUILD_ID": "",
-      "COMMAND_FILTER": []
+      "COMMAND_FILTER": [],
+      "WELCOME_MSG": false
     }
   ]
 }

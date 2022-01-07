@@ -112,7 +112,12 @@ const bootstrapDiscordBot = (client) => {
   });
 
   client.on("guildMemberAdd", (member) => {
-    displayWelcomeMessage(member);
+    const guildConfig = config.GUILDS.find(
+      (config) => config.GUILD_ID == member.guild.id
+    );
+    if (guildConfig != undefined && guildConfig.WELCOME_MSG) {
+      displayWelcomeMessage(member);
+    }
   });
 
   client.login(BOT_TOKEN);
