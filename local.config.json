@@ -10,5 +10,12 @@
   "BOT": {
     "NAME": "",
     "HELP_COMMAND": ""
+  },
+  "BANNERS": {
+    "default": {
+      "description": "",
+      "file": "",
+      "role": ""
+    }
   }
 }

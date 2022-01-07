@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { BANNERS } = require("../utils/constant");
+const { BANNERS } = require("../../config.json");
 const Interaction = require("../utils/interaction");
 const { generatePath } = require("../utils/path");
 const { generateOptions } = require("../utils/utils");
