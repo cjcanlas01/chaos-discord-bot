@@ -1,7 +1,7 @@
 {
   "name": "chaos-discord-bot",
   "version": "1.0.0",
-  "description": "Personal discord bot project.",
+  "description": "A custom discord bot for the game GOTWIC.",
   "main": "src/app.js",
   "scripts": {
     "start": "nodemon src/app.js --config nodemon.json"
