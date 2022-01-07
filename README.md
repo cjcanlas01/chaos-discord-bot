@@ -1,4 +1,4 @@
-# MAD DISCORD BOT
+# CHAOS DISCORD BOT
 
 ## Setup
 
