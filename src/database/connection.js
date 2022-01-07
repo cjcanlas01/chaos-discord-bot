@@ -10,7 +10,7 @@ const db = {};
 const modelsPath = `${__dirname}\\models`;
 
 let sequelize;
-if (config.use_env_variable != undefined) {
+if (config && config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
   sequelize = new Sequelize(
