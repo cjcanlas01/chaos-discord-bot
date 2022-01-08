@@ -7,9 +7,9 @@ const MESSAGES = {
   OFFICER_IN_SESSION: "There is a Protocol Officer in session.",
   NO_OFFICER_IN_SESSION: "There is no Protocol officer in session.",
   START_PO:
-    "NOW! A new protocole officer is here to give buffs. Thank you for your time generous PO ! https://static.wixstatic.com/media/3bd738_680cb14b338044b69d4ebfa7f451010e~mv2.jpg/v1/fill/w_569,h_427,al_c,q_80/madopen_copy.webp",
+    "NOW! A new Protocol Officer is here to give buffs. Thank you for your time generous PO!",
   STOP_PO:
-    "The Protocole officer is leaving, the buffs will not be available until another one take the role. Thank you ! https://static.wixstatic.com/media/3bd738_28c4b141811146a9b8d86c05d224b079~mv2.jpg/v1/fill/w_569,h_427,al_c,q_80/madclosed_copy.webp",
+    "The Protocol Officer is leaving, the buffs will not be available until another one take the role. Thank you!",
   INACTIVE_OFFICER_IN_SESSION:
     "There is a Protocol officer in session, if he/ she may seem inactive, execute `/po options: replace` to get the role. Thank you !",
   CURRENT_OFFICER_REPLACED: (username) =>
