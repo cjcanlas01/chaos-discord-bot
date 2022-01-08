@@ -85,6 +85,15 @@ module.exports = class Queue {
   }
 
   /**
+   * Get officer role ID
+   *
+   * @returns {string}
+   */
+  async getOfficerRoleId() {
+    return await this.action.getRoleId(this.officerRole);
+  }
+
+  /**
    * Empty queue channel
    * and display new queue
    */

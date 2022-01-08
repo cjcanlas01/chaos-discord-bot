@@ -3,7 +3,12 @@ const Interaction = require("../utils/interaction");
 const Queue = require("../utils/queue");
 const keyv = require("../utils/keyv");
 const { FARM_TITLES, ATK_TITLES } = require("../utils/constant");
-const { generateOptions, post, postSelf } = require("../utils/utils");
+const {
+  generateOptions,
+  post,
+  postSelf,
+  postWithMentions,
+} = require("../utils/utils");
 
 /**
  * Return template message for officer
@@ -148,11 +153,15 @@ module.exports = {
     switch (status) {
       case "request":
         const role = await queue.getTaggableOfficerRole();
+        const roleId = await queue.getOfficerRoleId();
         const isAdded = await queue.addPlayerInQueue(title, username);
         const requestMessage = isAdded
           ? notifyOfficer(role, title, username)
           : PLAYER_IN_QUEUE(username);
-        post(interaction, requestMessage);
+        postWithMentions(interaction, {
+          roleIds: roleId,
+          content: requestMessage,
+        });
         break;
       case "done":
         const isRemoved = await queue.removePlayerInQueue(username);

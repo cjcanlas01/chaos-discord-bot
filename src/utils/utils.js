@@ -119,6 +119,20 @@ const postSelf = (interaction, content) => {
 };
 
 /**
+ * Send interaction reply with mentions
+ *
+ * @param {object} interaction
+ * @param {object} postContent
+ */
+const postWithMentions = (interaction, postContent) => {
+  const { content, roleIds } = { ...postContent };
+  interaction.reply({
+    allowedMentions: { roles: [roleIds] },
+    content,
+  });
+};
+
+/**
  * Check if array is empty
  * @param {array} arr
  */
@@ -140,6 +154,7 @@ module.exports = {
   generateOptions,
   isArrayEmpty,
   stringInject,
+  postWithMentions,
   postSelf,
   post,
 };
