@@ -263,6 +263,17 @@ module.exports = class Interaction {
     return this.final;
   }
 
+  /**
+   * Get bot's GuildMember object
+   * - Reference: https://discord.js.org/#/docs/discord.js/stable/class/GuildMember
+   *
+   * @returns {object}
+   */
+  me() {
+    this.#reset(() => this.getGuild().this().me);
+    return this.final;
+  }
+
   // Starting from this line, all methods are utilities
 
   /**

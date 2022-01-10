@@ -150,6 +150,11 @@ module.exports = {
       return;
     }
 
+    if (!queue.checkIfAbleToSendMessageToQueueChannel()) {
+      postSelf(interaction, queue.MESSAGES.CANNOT_SEND_MESSAGE);
+      return;
+    }
+
     switch (status) {
       case "request":
         const role = await queue.getTaggableOfficerRole();

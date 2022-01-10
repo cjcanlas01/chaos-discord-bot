@@ -92,6 +92,11 @@ module.exports = {
         postSelf(interaction, NO_OFFICER_IN_SESSION);
         break;
       case "reset-queue":
+        if (!queue.checkIfAbleToSendMessageToQueueChannel()) {
+          postSelf(interaction, queue.MESSAGES.CANNOT_SEND_MESSAGE);
+          return;
+        }
+
         await queue.resetQueue();
         post(interaction, "Title queue has been cleared.");
         break;

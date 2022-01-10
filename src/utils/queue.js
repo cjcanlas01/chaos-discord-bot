@@ -1,6 +1,7 @@
 const Interaction = require("../utils/interaction");
 const { embed } = require("../utils/discord");
 const { QUEUE } = require("../utils/constant");
+const { Permissions } = require("discord.js");
 
 const MESSAGES = {
   NO_ACCESS_ROLE: "You do not have access for Protocol Officer.",
@@ -21,6 +22,8 @@ const MESSAGES = {
     `\`${username}\` is removed from the queue.`,
   PLAYER_NOT_IN_QUEUE: (username) => `\`${username}\` is not in a queue.`,
   PVP_TITLES_NOT_AVAILABLE: "PVP titles are not available.",
+  CANNOT_SEND_MESSAGE:
+    "I cannot send message to queue channel. One of my roles is restricting me! Help!",
 };
 
 module.exports = class Queue {
@@ -72,7 +75,13 @@ module.exports = class Queue {
   async getQueue() {
     const channel = this.getChannel();
     const contents = await channel.messages.fetch();
-    return contents.first().embeds[0].fields;
+    const message = contents.first();
+
+    if (message != undefined && message.embeds.length != 0) {
+      return message.embeds[0].fields;
+    }
+
+    return QUEUE;
   }
 
   /**
@@ -367,5 +376,16 @@ module.exports = class Queue {
       case "self":
         return this.action.availableUserName();
     }
+  }
+
+  /**
+   * Check if bot has permission to send message to queue channel
+   *
+   * @returns {boolean}
+   */
+  checkIfAbleToSendMessageToQueueChannel() {
+    return this.getChannel()
+      .permissionsFor(this.action.me())
+      .has(Permissions.FLAGS.SEND_MESSAGES);
   }
 };
