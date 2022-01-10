@@ -1,15 +1,16 @@
 const Interaction = require("../utils/interaction");
 const { embed } = require("../utils/discord");
 const { QUEUE } = require("../utils/constant");
+const { Permissions } = require("discord.js");
 
 const MESSAGES = {
   NO_ACCESS_ROLE: "You do not have access for Protocol Officer.",
   OFFICER_IN_SESSION: "There is a Protocol Officer in session.",
   NO_OFFICER_IN_SESSION: "There is no Protocol officer in session.",
   START_PO:
-    "NOW! A new protocole officer is here to give buffs. Thank you for your time generous PO ! https://static.wixstatic.com/media/3bd738_680cb14b338044b69d4ebfa7f451010e~mv2.jpg/v1/fill/w_569,h_427,al_c,q_80/madopen_copy.webp",
+    "NOW! A new Protocol Officer is here to give buffs. Thank you for your time generous PO!",
   STOP_PO:
-    "The Protocole officer is leaving, the buffs will not be available until another one take the role. Thank you ! https://static.wixstatic.com/media/3bd738_28c4b141811146a9b8d86c05d224b079~mv2.jpg/v1/fill/w_569,h_427,al_c,q_80/madclosed_copy.webp",
+    "The Protocol Officer is leaving, the buffs will not be available until another one take the role. Thank you!",
   INACTIVE_OFFICER_IN_SESSION:
     "There is a Protocol officer in session, if he/ she may seem inactive, execute `/po options: replace` to get the role. Thank you !",
   CURRENT_OFFICER_REPLACED: (username) =>
@@ -21,6 +22,8 @@ const MESSAGES = {
     `\`${username}\` is removed from the queue.`,
   PLAYER_NOT_IN_QUEUE: (username) => `\`${username}\` is not in a queue.`,
   PVP_TITLES_NOT_AVAILABLE: "PVP titles are not available.",
+  CANNOT_SEND_MESSAGE:
+    "I cannot send message to queue channel. One of my roles is restricting me! Help!",
 };
 
 module.exports = class Queue {
@@ -72,7 +75,13 @@ module.exports = class Queue {
   async getQueue() {
     const channel = this.getChannel();
     const contents = await channel.messages.fetch();
-    return contents.first().embeds[0].fields;
+    const message = contents.first();
+
+    if (message != undefined && message.embeds.length != 0) {
+      return message.embeds[0].fields;
+    }
+
+    return QUEUE;
   }
 
   /**
@@ -82,6 +91,15 @@ module.exports = class Queue {
    */
   async getTaggableOfficerRole() {
     return await this.action.getRoleTag(this.officerRole);
+  }
+
+  /**
+   * Get officer role ID
+   *
+   * @returns {string}
+   */
+  async getOfficerRoleId() {
+    return await this.action.getRoleId(this.officerRole);
   }
 
   /**
@@ -358,5 +376,16 @@ module.exports = class Queue {
       case "self":
         return this.action.availableUserName();
     }
+  }
+
+  /**
+   * Check if bot has permission to send message to queue channel
+   *
+   * @returns {boolean}
+   */
+  checkIfAbleToSendMessageToQueueChannel() {
+    return this.getChannel()
+      .permissionsFor(this.action.me())
+      .has(Permissions.FLAGS.SEND_MESSAGES);
   }
 };

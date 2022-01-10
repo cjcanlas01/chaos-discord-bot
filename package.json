@@ -1,10 +1,11 @@
 {
   "name": "chaos-discord-bot",
   "version": "1.0.0",
-  "description": "A custom discord bot for the game GOTWIC.",
+  "description": "A custom discord bot for the browser game GOTWIC.",
   "main": "src/app.js",
   "scripts": {
-    "start": "nodemon src/app.js --config nodemon.json"
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js --config nodemon.json"
   },
   "keywords": [],
   "author": "dev.cjcanlas@gmail.com",

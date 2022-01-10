@@ -7,6 +7,7 @@ module.exports = {
     peacekeeper: "Peacekeeper",
   },
   ATK_TITLES: {
+    ml: "Master of Laws",
     lc: "Lord Commander",
     lc_inf_cav: "LC + Infantry Cavalry",
     lc_spr_inf: "LC + Spearman Infantry",
@@ -35,6 +36,11 @@ module.exports = {
     },
     {
       name: "Peacekeeper",
+      value: "[EMPTY]",
+      inline: true,
+    },
+    {
+      name: "Master of Laws",
       value: "[EMPTY]",
       inline: true,
     },
