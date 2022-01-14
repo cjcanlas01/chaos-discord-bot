@@ -4,9 +4,10 @@ const { Routes } = require("discord-api-types/v9");
 const { generatePath } = require("./path");
 const { BOT_TOKEN, CLIENT_ID } = require("../config");
 const config = require("../../config.json");
-const { isArrayEmpty, stringInject } = require("../utils/utils");
+const { isArrayEmpty, stringInject, postSelf } = require("../utils/utils");
 const DB = require("../utils/db");
 const Interaction = require("../utils/interaction");
+const { interactionHandler } = require("./discord");
 
 /**
  * Save database config records to discord collection
@@ -108,7 +109,7 @@ const bootstrapDiscordBot = (client) => {
     console.log(`Logged in as ${client.user.tag}!`);
   });
 
-  client.on("interactionCreate", async (interaction) => {
+  client.on("interactionCreate", (interaction) => {
     slashInteractions(client, interaction);
     // buttonInteractions(client, interaction);
   });
@@ -125,13 +126,16 @@ const bootstrapDiscordBot = (client) => {
   client.login(BOT_TOKEN);
 };
 
-const { interactionHandler } = require("./discord");
-
 const slashInteractions = (client, interaction) => {
   if (interaction.isCommand()) {
     if (!client.commands.has(interaction.commandName)) return;
     interactionHandler(async function () {
-      await client.commands.get(interaction.commandName).execute(interaction);
+      try {
+        await client.commands.get(interaction.commandName).execute(interaction);
+      } catch (error) {
+        const ERROR_MESSAGE = `\`\`\`${error.name}: ${error.message} \n\nContact Q Coldwater #1395 asap.\`\`\``;
+        postSelf(interaction, ERROR_MESSAGE);
+      }
     }, interaction);
   }
 };
