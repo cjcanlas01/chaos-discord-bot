@@ -14,11 +14,16 @@ const { generateOptions } = require("../utils/utils");
 const identifyRole = (role, action) => {
   const defaultRole = ["HERE", "EVERYONE"];
   if (defaultRole.includes(role)) {
-    return `@${role.toLowerCase()}`;
+    return {
+      tag: `@${role.toLowerCase()}`,
+    };
   }
 
-  const ROLES = action.getBotConfigs();
-  return action.getRoleTag(ROLES[role]);
+  const selectedRole = action.getBotConfigs()[role];
+  return {
+    tag: action.getRoleTag(selectedRole),
+    id: action.getRoleId(selectedRole),
+  };
 };
 
 /**
@@ -30,15 +35,22 @@ const identifyRole = (role, action) => {
  */
 const displayBanner = (details, action) => {
   const { content, file, role } = { ...details };
-  const taggableRole = identifyRole(role, action);
-  let bannerContent = `${taggableRole}`;
+  const { tag, id } = identifyRole(role, action);
+  let bannerContent = `${tag}`;
   if (content) {
     bannerContent += content;
   }
-  return {
+
+  const banner = {
     content: bannerContent,
     file,
   };
+
+  if (id) {
+    banner.roleIds = id;
+  }
+
+  return banner;
 };
 
 // Generate options
@@ -61,10 +73,18 @@ module.exports = {
     const action = new Interaction(interaction);
     const optionCode = action.getOptions().getString("options");
     const details = BANNERS[optionCode];
-    const { content, file } = { ...displayBanner(details, action) };
-    interaction.reply({
+    const { content, roleIds, file } = displayBanner(details, action);
+    const message = {
       content,
       files: [generatePath(`../assets/images/${file}`)],
-    });
+    };
+
+    if (roleIds) {
+      message.allowedMentions = { roles: [roleIds] };
+    } else {
+      message.allowedMentions = { parse: ["everyone"] };
+    }
+
+    interaction.reply(message);
   },
 };
