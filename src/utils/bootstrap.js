@@ -134,6 +134,7 @@ const slashInteractions = (client, interaction) => {
         await client.commands.get(interaction.commandName).execute(interaction);
       } catch (error) {
         const ERROR_MESSAGE = `\`\`\`${error.name}: ${error.message} \n\nContact Q Coldwater #1395 asap.\`\`\``;
+        console.log(error.stack);
         postSelf(interaction, ERROR_MESSAGE);
       }
     }, interaction);
