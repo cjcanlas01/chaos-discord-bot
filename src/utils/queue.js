@@ -43,6 +43,7 @@ module.exports = class Queue {
     this.officerRole = PO_ROLE;
     this.officerAccessRole = PO_ACCESS_ROLE;
     this.header = BUFF_QUEUE_HEADER;
+    this.acCommand = "ac";
     this.EMPTY = "[EMPTY]";
     this.MESSAGES = MESSAGES;
   }
@@ -125,7 +126,7 @@ module.exports = class Queue {
     const queue = await this.getQueue();
     const parsedQueue = this.splitTitles(queue);
     for (let title of parsedQueue) {
-      if (this.checkPlayerInQueue(title.value, username)) {
+      if (this.checkPlayerInQueue(parsedQueue, username)) {
         return false;
       }
       if (title.name == selectedTitle) {
@@ -172,12 +173,24 @@ module.exports = class Queue {
   /**
    * Check if player name is included in list under selected title
    *
-   * @param {string} title
+   * @param {object | array} queue
    * @param {string} username
    * @returns {boolean} If player is found, return true else false
    */
-  checkPlayerInQueue(title, username) {
-    if (Array.isArray(title) && title.includes(username)) return true;
+  checkPlayerInQueue(queue, username) {
+    if (Array.isArray(queue)) {
+      if (queue.length == 1) {
+        if (queue.includes(username)) return true;
+      }
+
+      if (queue.length > 1) {
+        const checkUserOnEveryQueue = queue.some((title) =>
+          title.value.includes(username)
+        );
+        if (checkUserOnEveryQueue) return true;
+      }
+    }
+
     return false;
   }
 
@@ -387,5 +400,17 @@ module.exports = class Queue {
     return this.getChannel()
       .permissionsFor(this.action.me())
       .has(Permissions.FLAGS.SEND_MESSAGES);
+  }
+
+  /**
+   *  Check if guild has Alliance Conquest command
+   *
+   * @returns {boolean}
+   */
+  async checkIfAllianceConquesCommandtExists() {
+    const guildCommands = await this.action.getGuildCommands().fetch();
+    const guildCommandsName = guildCommands.map((command) => command.name);
+    if (guildCommandsName.includes(this.acCommand)) return true;
+    return false;
   }
 };

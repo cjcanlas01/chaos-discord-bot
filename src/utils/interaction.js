@@ -89,6 +89,17 @@ module.exports = class Interaction {
   }
 
   /**
+   * Get GuildApplicationCommandManager object
+   * - Reference: https://discord.js.org/#/docs/discord.js/stable/class/GuildApplicationCommandManager
+   *
+   * @returns {object}
+   */
+  getGuildCommands() {
+    this.#reset(() => this.getGuild().this().commands);
+    return this.final;
+  }
+
+  /**
    * Get current channel of where the interaction was executed
    *
    * @returns {TextChannel}

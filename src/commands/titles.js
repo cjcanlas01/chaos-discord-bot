@@ -44,6 +44,9 @@ const requestDetails = async (action, queue) => {
   const titleCommand = action.getOptions().getSubcommand();
   const username = await queue.getRequestingName();
   const buffModeStatus = await keyv.get(queue.getBuffModeId());
+  const hasAllianceConquestCommand =
+    await queue.checkIfAllianceConquesCommandtExists();
+
   if (titleCommand == "farm") {
     return {
       status: "request",
@@ -52,7 +55,7 @@ const requestDetails = async (action, queue) => {
     };
   }
   if (titleCommand == "atk") {
-    if (!buffModeStatus) {
+    if (hasAllianceConquestCommand && !buffModeStatus) {
       return {
         status: "unavailable",
       };
@@ -176,7 +179,7 @@ module.exports = {
         post(interaction, doneMessage);
         break;
       case "unavailable":
-        postSelf(interaction, PVP_TITLES_NOT_AVAILABLE);
+        post(interaction, PVP_TITLES_NOT_AVAILABLE);
     }
   },
 };
