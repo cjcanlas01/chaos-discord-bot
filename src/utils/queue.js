@@ -24,6 +24,7 @@ const MESSAGES = {
   PVP_TITLES_NOT_AVAILABLE: "PVP titles are not available.",
   CANNOT_SEND_MESSAGE:
     "I cannot send message to queue channel. One of my roles is restricting me! Help!",
+  PVP_TITLES_ONLY_AVAILABLE: "Only PVP titles are available as of this moment.",
 };
 
 module.exports = class Queue {

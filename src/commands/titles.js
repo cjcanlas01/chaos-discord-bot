@@ -48,6 +48,11 @@ const requestDetails = async (action, queue) => {
     await queue.checkIfAllianceConquesCommandtExists();
 
   if (titleCommand == "farm") {
+    if (hasAllianceConquestCommand && buffModeStatus) {
+      return {
+        status: "restricted",
+      };
+    }
     return {
       status: "request",
       title: FARM_TITLES[action.getOptions().getString("farm_titles")],
@@ -136,6 +141,7 @@ module.exports = {
       PLAYER_REMOVED_IN_QUEUE,
       PLAYER_NOT_IN_QUEUE,
       PVP_TITLES_NOT_AVAILABLE,
+      PVP_TITLES_ONLY_AVAILABLE,
     } = { ...queue.MESSAGES };
 
     if (!isOfficerOnline) {
@@ -148,7 +154,7 @@ module.exports = {
       return;
     }
 
-    if (status != "unavailable" && !username) {
+    if (!["unavailable", "restricted"].includes(status) && !username) {
       postSelf(interaction, "Please enter a discord tag or castle name.");
       return;
     }
@@ -180,6 +186,10 @@ module.exports = {
         break;
       case "unavailable":
         post(interaction, PVP_TITLES_NOT_AVAILABLE);
+        break;
+      case "restricted":
+        post(interaction, PVP_TITLES_ONLY_AVAILABLE);
+        break;
     }
   },
 };
