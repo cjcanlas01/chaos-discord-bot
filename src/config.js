@@ -1,7 +1,11 @@
 const { access } = require("fs/promises");
 const { constants } = require("fs");
 const axios = require("axios");
-const { GIST_ID, GIST_FILENAME } = require("./env-config");
+const {
+  GIST_ID,
+  GIST_FILENAME,
+  GITHUB_PERSONAL_TOKEN,
+} = require("./env-config");
 
 /**
  * Get Github Gist URL
@@ -32,7 +36,11 @@ const checkIfConfigFileExists = async () => {
  */
 const getConfig = async () => {
   if (checkIfConfigFileExists()) {
-    const gist = await axios.get(gistUrl(GIST_ID));
+    const gist = await axios.get(gistUrl(GIST_ID), {
+      headers: {
+        Authorization: `Bearer ${GITHUB_PERSONAL_TOKEN}`,
+      },
+    });
     const parsedConfig = JSON.parse(gist.data.files[GIST_FILENAME].content);
     return {
       source: "remote",
