@@ -106,7 +106,7 @@ const bootstrapSlashCommands = (commandsList) => {
  * @param {Client} client
  */
 const bootstrapDiscordBot = (client) => {
-  client.on("ready", async () => {
+  client.on("ready", () => {
     client.user.setActivity(`${BOT_HELP_COMMAND}help`, {
       type: "LISTENING",
     });
