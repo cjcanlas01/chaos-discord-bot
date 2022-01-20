@@ -2,7 +2,7 @@ const fs = require("fs");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const { generatePath } = require("./path");
-const { BOT_TOKEN, CLIENT_ID } = require("../env-config");
+const { BOT_TOKEN, CLIENT_ID, BOT_HELP_COMMAND } = require("../env-config");
 const { getConfigs } = require("../config");
 const {
   isArrayEmpty,
@@ -107,8 +107,7 @@ const bootstrapSlashCommands = (commandsList) => {
  */
 const bootstrapDiscordBot = (client) => {
   client.on("ready", async () => {
-    const { BOT } = await getConfigs();
-    client.user.setActivity(`${BOT.HELP_COMMAND}help`, {
+    client.user.setActivity(`${BOT_HELP_COMMAND}help`, {
       type: "LISTENING",
     });
     console.log(`Logged in as ${client.user.tag}!`);
