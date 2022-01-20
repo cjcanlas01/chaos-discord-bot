@@ -67,7 +67,6 @@ module.exports = {
         .setName("options")
         .setDescription("Banner collection. Select one!")
         .setRequired(true)
-        .addChoices(generatedOptions)
     ),
   async execute(interaction) {
     const action = new Interaction(interaction);

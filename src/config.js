@@ -30,31 +30,28 @@ const checkIfConfigFileExists = async () => {
 };
 
 /**
- * Get config content based on whether file exists inside project
+ * Get config if exists inside project else get from Github Gist
  *
  * @returns {object}
  */
-const getConfig = async () => {
-  if (checkIfConfigFileExists()) {
+const getConfigs = async () => {
+  const configFileExists = await checkIfConfigFileExists();
+  if (!configFileExists) {
     const gist = await axios.get(gistUrl(GIST_ID), {
       headers: {
         Authorization: `Bearer ${GITHUB_PERSONAL_TOKEN}`,
       },
     });
-    const parsedConfig = JSON.parse(gist.data.files[GIST_FILENAME].content);
-    return {
-      source: "remote",
-      config: parsedConfig,
-    };
+
+    return JSON.parse(gist.data.files[GIST_FILENAME].content);
   }
 
-  return {
-    source: "local",
-    config: require("../config.json"),
-  };
+  // Delete cache to get latest config content
+  delete require.cache[require.resolve("../config.json")];
+  return require("../config.json");
 };
 
 module.exports = {
   checkIfConfigFileExists,
-  getConfig,
+  getConfigs,
 };

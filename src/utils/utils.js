@@ -148,9 +148,21 @@ const stringInject = (str, arr) => {
   });
 };
 
+/**
+ * Find command object property by name
+ *
+ * @param {array} array
+ * @param {string} name
+ * @return {void}
+ */
+const arrayFindPropertyByName = (array, name) => {
+  return array.find((value) => value.name == name);
+};
+
 module.exports = {
   checkIfUserIsAllowed,
   computeRequestCount,
+  arrayFindPropertyByName,
   generateOptions,
   isArrayEmpty,
   stringInject,

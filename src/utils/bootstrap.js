@@ -3,8 +3,13 @@ const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const { generatePath } = require("./path");
 const { BOT_TOKEN, CLIENT_ID } = require("../env-config");
-const config = require("../../config.json");
-const { isArrayEmpty, stringInject, postSelf } = require("../utils/utils");
+const { getConfigs } = require("../config");
+const {
+  isArrayEmpty,
+  stringInject,
+  postSelf,
+  arrayFindPropertyByName,
+} = require("../utils/utils");
 const DB = require("../utils/db");
 const Interaction = require("../utils/interaction");
 const { interactionHandler } = require("./discord");
@@ -74,8 +79,7 @@ const bootstrapSlashCommands = (commandsList) => {
   (async () => {
     try {
       console.log("Started refreshing application (/) commands.");
-
-      const { GUILDS } = { ...config };
+      const { GUILDS } = await getConfigs();
       for (const info of GUILDS) {
         const { GUILD_ID, COMMAND_FILTER } = { ...info };
         const commands = isArrayEmpty(COMMAND_FILTER)
@@ -102,8 +106,9 @@ const bootstrapSlashCommands = (commandsList) => {
  * @param {Client} client
  */
 const bootstrapDiscordBot = (client) => {
-  client.on("ready", () => {
-    client.user.setActivity(`${config.BOT.HELP_COMMAND}help`, {
+  client.on("ready", async () => {
+    const { BOT } = await getConfigs();
+    client.user.setActivity(`${BOT.HELP_COMMAND}help`, {
       type: "LISTENING",
     });
     console.log(`Logged in as ${client.user.tag}!`);
@@ -160,16 +165,28 @@ const updateCommandOptions = async (command) => {
   const db = new DB();
   switch (command.name) {
     case "bank-request":
-      const option = command.options.find((option) => option.name == "bank");
+      const option = arrayFindPropertyByName(command.options, "bank");
       const banks = await db.getBankLists();
       const banksOption = banks.map((bank) => {
-        const { name } = { ...bank };
+        const { name } = bank;
         return {
           name,
           value: name,
         };
       });
       option.choices = banksOption;
+      return command;
+    case "banners":
+      const options = arrayFindPropertyByName(command.options, "options");
+      const { BANNERS } = await getConfigs();
+      const banners = Object.entries(BANNERS).map((banner) => {
+        const [id, value] = banner;
+        return {
+          name: value.description,
+          value: id,
+        };
+      });
+      options.choices = banners;
       return command;
   }
   return command;
