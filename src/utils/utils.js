@@ -125,7 +125,7 @@ const postSelf = (interaction, content) => {
  * @param {object} postContent
  */
 const postWithMentions = (interaction, postContent) => {
-  const { content, roleIds } = { ...postContent };
+  const { content, roleIds } = postContent;
   interaction.reply({
     allowedMentions: { roles: [roleIds] },
     content,

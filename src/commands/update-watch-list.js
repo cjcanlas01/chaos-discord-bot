@@ -13,7 +13,7 @@ const { checkIfUserIsAllowed } = require("../utils/utils");
  */
 const parseGuildMemberList = (guildMemberList) => {
   return guildMemberList.reduce((acc, value) => {
-    const { id, username } = { ...value.user };
+    const { id, username } = value.user;
     return {
       ...acc,
       [id]: value.nickname || username,
@@ -31,7 +31,7 @@ const parseGuildMemberList = (guildMemberList) => {
  */
 const applyMemberNames = (watchRecords, parsedGuildMemberList) => {
   return watchRecords.map((value) => {
-    const { playerId } = { ...value };
+    const { playerId } = value;
     return {
       playerId: playerId,
       name:
@@ -49,7 +49,7 @@ const applyMemberNames = (watchRecords, parsedGuildMemberList) => {
  */
 const updateWatchRecords = async (watchRecords) => {
   for (const records of watchRecords) {
-    const { playerId, name } = { ...records };
+    const { playerId, name } = records;
     await db.Alts.update(
       { playerName: name },
       {

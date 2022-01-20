@@ -12,11 +12,11 @@ module.exports = {
     const commands = action.getClientCommands();
     const guildId = action.getGuild().this().id;
     const guild = config.GUILDS.find((guild) => guild.GUILD_ID == guildId);
-    const { COMMAND_FILTER } = { ...guild };
+    const { COMMAND_FILTER } = guild;
     const helpDetails = commands
       .filter((command) => !COMMAND_FILTER.includes(command.data.name))
       .map((command) => {
-        const { name, description } = { ...command.data };
+        const { name, description } = command.data;
         return {
           name: `/${name}`,
           value: description,

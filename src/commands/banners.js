@@ -34,7 +34,7 @@ const identifyRole = (role, action) => {
  * @returns {object}
  */
 const displayBanner = (details, action) => {
-  const { content, file, role } = { ...details };
+  const { content, file, role } = details;
   const { tag, id } = identifyRole(role, action);
   let bannerContent = `${tag}`;
   if (content) {

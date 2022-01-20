@@ -131,9 +131,7 @@ module.exports = {
     const queue = new Queue(interaction);
     const action = new Interaction(interaction);
     const isOfficerOnline = await queue.isOfficerOnline();
-    const { status, title, username } = {
-      ...(await requestDetails(action, queue)),
-    };
+    const { status, title, username } = await requestDetails(action, queue);
     const isBuffRequestsChannel = await queue.checkIfBuffRequestsChannel();
     const {
       NO_OFFICER_IN_SESSION,
@@ -142,7 +140,7 @@ module.exports = {
       PLAYER_NOT_IN_QUEUE,
       PVP_TITLES_NOT_AVAILABLE,
       PVP_TITLES_ONLY_AVAILABLE,
-    } = { ...queue.MESSAGES };
+    } = queue.MESSAGES;
 
     if (!isOfficerOnline) {
       postSelf(interaction, NO_OFFICER_IN_SESSION);
