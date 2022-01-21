@@ -36,15 +36,17 @@ module.exports = class Queue {
       PO_ROLE,
       PO_ACCESS_ROLE,
       BUFF_QUEUE_HEADER,
-    } = {
-      ...this.action.getBotConfigs(),
-    };
+    } = this.action.getBotConfigs();
     this.queueChannel = QUEUE_CHANNEL;
     this.requestChannel = BUFF_CHANNEL;
     this.officerRole = PO_ROLE;
     this.officerAccessRole = PO_ACCESS_ROLE;
     this.header = BUFF_QUEUE_HEADER;
     this.acCommand = "ac";
+    this.mode = {
+      ADD: "add",
+      DONE: "done",
+    };
     this.EMPTY = "[EMPTY]";
     this.MESSAGES = MESSAGES;
   }
@@ -127,7 +129,7 @@ module.exports = class Queue {
     const queue = await this.getQueue();
     const parsedQueue = this.splitTitles(queue);
     for (let title of parsedQueue) {
-      if (this.checkPlayerInQueue(parsedQueue, username)) {
+      if (this.checkPlayerInQueue(parsedQueue, username, this.mode.ADD)) {
         return false;
       }
       if (title.name == selectedTitle) {
@@ -154,7 +156,7 @@ module.exports = class Queue {
     const parsedQueue = this.splitTitles(queue);
     let userFound;
     for (let title of parsedQueue) {
-      if (this.checkPlayerInQueue(title.value, username)) {
+      if (this.checkPlayerInQueue(title.value, username, this.mode.DONE)) {
         title.value = title.value.filter((name) => name != username);
         if (title.value.length <= 0) {
           title.value.push(this.EMPTY);
@@ -176,15 +178,16 @@ module.exports = class Queue {
    *
    * @param {object | array} queue
    * @param {string} username
+   * @param {string} mode
    * @returns {boolean} If player is found, return true else false
    */
-  checkPlayerInQueue(queue, username) {
+  checkPlayerInQueue(queue, username, mode) {
     if (Array.isArray(queue)) {
-      if (queue.length == 1) {
+      if (mode == this.mode.DONE) {
         if (queue.includes(username)) return true;
       }
 
-      if (queue.length > 1) {
+      if (mode == this.mode.ADD) {
         const checkUserOnEveryQueue = queue.some((title) =>
           title.value.includes(username)
         );
@@ -255,7 +258,7 @@ module.exports = class Queue {
    */
   splitTitles(queue) {
     return queue.map((title) => {
-      title.value = title.value.split("\n");
+      title.value = title.value.split("\n").map((user) => user.trim());
       return title;
     });
   }
@@ -368,8 +371,8 @@ module.exports = class Queue {
   async getRequestingName() {
     const optionsToFilter = ["farm_titles", "atk_titles"];
     const commandObject = this.action.getOptions().data;
-    const [commandDetails] = [...commandObject];
-    const { options } = { ...commandDetails };
+    const [commandDetails] = commandObject;
+    const { options } = commandDetails;
     const selectedOption =
       options != undefined &&
       options.filter((option) => !optionsToFilter.includes(option.name))[0];
