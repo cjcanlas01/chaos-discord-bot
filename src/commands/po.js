@@ -39,9 +39,7 @@ module.exports = {
       START_PO,
       STOP_PO,
       CURRENT_OFFICER_REPLACED,
-    } = {
-      ...queue.MESSAGES,
-    };
+    } = queue.MESSAGES;
 
     if (!isBuffRequestsChannel) {
       postSelf(interaction, "Warning! Cannot execute command here.");

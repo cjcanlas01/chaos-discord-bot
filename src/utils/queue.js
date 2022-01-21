@@ -36,9 +36,7 @@ module.exports = class Queue {
       PO_ROLE,
       PO_ACCESS_ROLE,
       BUFF_QUEUE_HEADER,
-    } = {
-      ...this.action.getBotConfigs(),
-    };
+    } = this.action.getBotConfigs();
     this.queueChannel = QUEUE_CHANNEL;
     this.requestChannel = BUFF_CHANNEL;
     this.officerRole = PO_ROLE;
@@ -373,8 +371,8 @@ module.exports = class Queue {
   async getRequestingName() {
     const optionsToFilter = ["farm_titles", "atk_titles"];
     const commandObject = this.action.getOptions().data;
-    const [commandDetails] = [...commandObject];
-    const { options } = { ...commandDetails };
+    const [commandDetails] = commandObject;
+    const { options } = commandDetails;
     const selectedOption =
       options != undefined &&
       options.filter((option) => !optionsToFilter.includes(option.name))[0];

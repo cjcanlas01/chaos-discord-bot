@@ -1,8 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const { BANNERS } = require("../../config.json");
+const { getConfigs } = require("../config");
 const Interaction = require("../utils/interaction");
 const { generatePath } = require("../utils/path");
-const { generateOptions } = require("../utils/utils");
 
 /**
  * Identify and get taggable role
@@ -34,7 +33,7 @@ const identifyRole = (role, action) => {
  * @returns {object}
  */
 const displayBanner = (details, action) => {
-  const { content, file, role } = { ...details };
+  const { content, file, role } = details;
   const { tag, id } = identifyRole(role, action);
   let bannerContent = `${tag}`;
   if (content) {
@@ -53,11 +52,6 @@ const displayBanner = (details, action) => {
   return banner;
 };
 
-// Generate options
-const generatedOptions = generateOptions(BANNERS, (key, value) => {
-  return [value.description, key];
-});
-
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("banners")
@@ -67,11 +61,11 @@ module.exports = {
         .setName("options")
         .setDescription("Banner collection. Select one!")
         .setRequired(true)
-        .addChoices(generatedOptions)
     ),
   async execute(interaction) {
     const action = new Interaction(interaction);
     const optionCode = action.getOptions().getString("options");
+    const { BANNERS } = await getConfigs();
     const details = BANNERS[optionCode];
     const { content, roleIds, file } = displayBanner(details, action);
     const message = {
