@@ -7,10 +7,6 @@
       "WELCOME_MSG": false
     }
   ],
-  "BOT": {
-    "NAME": "",
-    "HELP_COMMAND": ""
-  },
   "BANNERS": {
     "default": {
       "description": "",
