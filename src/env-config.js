@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 module.exports = {
   BOT_TOKEN: process.env.BOT_TOKEN,
   CLIENT_ID: process.env.CLIENT_ID,
@@ -9,4 +7,5 @@ module.exports = {
   GITHUB_PERSONAL_TOKEN: process.env.GITHUB_PERSONAL_TOKEN,
   BOT_NAME: process.env.BOT_NAME,
   BOT_HELP_COMMAND: process.env.BOT_HELP_COMMAND,
+  NODE_ENV: process.env.NODE_ENV,
 };
