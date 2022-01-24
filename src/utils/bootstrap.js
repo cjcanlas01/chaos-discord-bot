@@ -118,12 +118,18 @@ const bootstrapDiscordBot = (client) => {
     // buttonInteractions(client, interaction);
   });
 
-  client.on("guildMemberAdd", (member) => {
-    const guildConfig = config.GUILDS.find(
+  client.on("guildMemberAdd", async (member) => {
+    const { GUILDS } = await getConfigs();
+    const guildConfig = GUILDS.find(
       (config) => config.GUILD_ID == member.guild.id
     );
     if (guildConfig != undefined && guildConfig.WELCOME_MSG) {
-      displayWelcomeMessage(member);
+      const isWelcomeMessageDisplayed = displayWelcomeMessage(member);
+      if (!isWelcomeMessageDisplayed) {
+        console.log(
+          "No record for welcome messages found for this server and channel."
+        );
+      }
     }
   });
 
@@ -196,17 +202,25 @@ const updateCommandOptions = async (command) => {
  * Display welcome message on guildMemberAdd event
  *
  * @param {object} member
+ * @returns {boolean}
  */
 const displayWelcomeMessage = (member) => {
   const guild = member.guild;
   const action = new Interaction(member);
-  const { channel, message } = action
-    .getClient()
-    .this()
-    .welcomeMessages.get(guild.id);
-  const welcomeChannel = guild.channels.cache.find((ch) => ch.name == channel);
-  const welcomeMessage = stringInject(message, [member.toString()]);
-  welcomeChannel.send(welcomeMessage);
+  const client = action.getClient().this();
+
+  const welcomeMessages = client.welcomeMessages.get(guild.id);
+  if (welcomeMessages) {
+    const { channel, message } = welcomeMessages;
+    const welcomeChannel = guild.channels.cache.find(
+      (ch) => ch.name == channel
+    );
+    const welcomeMessage = stringInject(message, [member.toString()]);
+    welcomeChannel.send(welcomeMessage);
+    return true;
+  }
+
+  return false;
 };
 
 module.exports = {
