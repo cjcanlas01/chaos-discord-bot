@@ -142,23 +142,23 @@ module.exports = {
       PVP_TITLES_ONLY_AVAILABLE,
     } = queue.MESSAGES;
 
-    if (!isOfficerOnline) {
-      postSelf(interaction, NO_OFFICER_IN_SESSION);
-      return;
-    }
-
     if (!isBuffRequestsChannel) {
       postSelf(interaction, "Warning! Cannot execute command here.");
       return;
     }
 
-    if (!["unavailable", "restricted"].includes(status) && !username) {
-      postSelf(interaction, "Please enter a discord tag or castle name.");
+    if (!queue.checkIfAbleToSendMessageToQueueChannel()) {
+      postSelf(interaction, queue.MESSAGES.CANNOT_SEND_MESSAGE);
       return;
     }
 
-    if (!queue.checkIfAbleToSendMessageToQueueChannel()) {
-      postSelf(interaction, queue.MESSAGES.CANNOT_SEND_MESSAGE);
+    if (!isOfficerOnline) {
+      postSelf(interaction, NO_OFFICER_IN_SESSION);
+      return;
+    }
+
+    if (!["unavailable", "restricted"].includes(status) && !username) {
+      postSelf(interaction, "Please enter a discord tag or castle name.");
       return;
     }
 
