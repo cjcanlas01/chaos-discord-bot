@@ -11,9 +11,6 @@ module.exports = {
       guild: {
         type: Sequelize.STRING,
       },
-      guildId: {
-        type: Sequelize.STRING,
-      },
       channel: {
         type: Sequelize.STRING,
       },
