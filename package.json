@@ -1,6 +1,9 @@
 {
   "name": "chaos-discord-bot",
   "version": "1.0.0",
+  "engines": {
+    "node": "16.6.1"
+  },
   "description": "A custom discord bot for the browser game GOTWIC.",
   "main": "src/app.js",
   "scripts": {
