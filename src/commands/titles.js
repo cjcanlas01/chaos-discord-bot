@@ -19,7 +19,7 @@ const {
  * @returns {string}
  */
 const notifyOfficer = (role, title, name) => {
-  return `${role} please assign \`${title}\` to \`${name}.\``;
+  return `${role} please assign \`${title}\` to \`${name}\`.`;
 };
 
 /**
