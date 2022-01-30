@@ -85,10 +85,13 @@ module.exports = {
       watchRecords,
       parsedGuildMemberList
     );
-    await updateWatchRecords(updatedMemberNames);
     await interaction.reply({
-      content: "Guild watch records updated!",
+      content: "I'm working on it! Please wait...",
       ephemeral: true,
+    });
+    await updateWatchRecords(updatedMemberNames);
+    await interaction.editReply({
+      content: "Guild watch records updated!",
     });
   },
 };
