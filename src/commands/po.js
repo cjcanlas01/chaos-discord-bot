@@ -1,10 +1,22 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const Interaction = require("../utils/interaction");
 const Queue = require("../utils/queue");
-const { post, postSelf } = require("../utils/utils");
+const { post, postSelf, postWithFiles } = require("../utils/utils");
 
 const processProtocolOfficer = async (callback) => {
   return callback();
+};
+
+const postSessionReply = (interaction, message) => {
+  if (Array.isArray(message)) {
+    const [content, image] = message;
+    postWithFiles(interaction, {
+      files: [image],
+      content,
+    });
+  } else {
+    post(interaction, message);
+  }
 };
 
 module.exports = {
@@ -59,7 +71,7 @@ module.exports = {
               queue.addProtocolOfficerRole();
               return START_PO;
             });
-        post(interaction, startMessage);
+        postSessionReply(interaction, startMessage);
         break;
       case "stop":
         if (isOfficerOnline) {
@@ -70,7 +82,7 @@ module.exports = {
                   return STOP_PO;
                 })
               : INACTIVE_OFFICER_IN_SESSION;
-          post(interaction, stopMessage);
+          postSessionReply(interaction, stopMessage);
           return;
         }
         postSelf(interaction, NO_OFFICER_IN_SESSION);

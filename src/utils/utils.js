@@ -133,6 +133,20 @@ const postWithMentions = (interaction, postContent) => {
 };
 
 /**
+ * Send interaction reply with file attachments
+ *
+ * @param {object} interaction
+ * @param {object} postContent
+ */
+const postWithFiles = (interaction, postContent) => {
+  const { content, files } = postContent;
+  interaction.reply({
+    files,
+    content,
+  });
+};
+
+/**
  * Check if array is empty
  * @param {array} arr
  */
@@ -167,6 +181,7 @@ module.exports = {
   isArrayEmpty,
   stringInject,
   postWithMentions,
+  postWithFiles,
   postSelf,
   post,
 };
