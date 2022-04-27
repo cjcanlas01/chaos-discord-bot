@@ -5,7 +5,7 @@ const { Op } = require("sequelize");
 module.exports = class Watch {
   constructor() {
     this.messages = {
-      PROTECTOR_NOT_FOUND: "Protectors not found!",
+      PROTECTOR_NOT_FOUND: (castleName) => `${castleName}'s protectors not found!`,
       PROTECTORS_FOUND: (protectors, castleName) =>
         `Hey ${protectors.join(" ")}, ${castleName} is unbubbled!`,
     };
