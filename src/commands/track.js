@@ -48,7 +48,7 @@ module.exports = {
         const players = await track.findProtectors(castleName);
         const unbubbledMessage =
           players.length == 0
-            ? track.messages.PROTECTOR_NOT_FOUND
+            ? track.messages.PROTECTOR_NOT_FOUND(castleName)
             : track.messages.PROTECTORS_FOUND(players, castleName);
         post(interaction, unbubbledMessage);
         break;
