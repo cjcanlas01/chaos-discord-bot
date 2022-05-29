@@ -6,6 +6,8 @@ const path = require("path");
 const { initializeSheet } = require("../utils/google-spreadsheet");
 const { getConfigs } = require("../config");
 const { postSelf, checkIfUserIsAllowed } = require("../utils/utils");
+const FTP = require('ftp')
+const c = new FTP();
 
 const INTERACTION_MESSAGE = {
   START_PROCESS: "I'm working on it! Please wait...",
@@ -26,6 +28,25 @@ const getRebelsCSV = (path) => {
   return fs.readFileSync(csvPath, "utf8");
 };
 
+const getRebelsCSV_FTP = () => {
+  const csvPath = path.resolve(__dirname, "../../rebels.csv");
+  c.connect({
+    host: "mad.psykoral.com",
+    user: "madgotwic",
+    password: "Ai7USLJ3"
+  });
+
+  c.on('ready', function() {
+    c.get('/mad.psykoral.com/rebels.csv', function(err, stream) {
+      if (err) throw err;
+      stream.once('close', function() { ftp_client.end(); });
+      stream.pipe(fs.createWriteStream(csvPath));
+    });
+  });
+
+  return fs.readFileSync(csvPath, "utf8");
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("track-rebels")
@@ -33,7 +54,7 @@ module.exports = {
   async execute(interaction) {
     const action = new Interaction(interaction);
     const { TRACK_REBELS } = await getConfigs();
-    const rebelsList = getRebelsCSV(path);
+    const rebelsList = getRebelsCSV_FTP();
     const isUserAllowed = await checkIfUserIsAllowed(action);
 
     if (!isUserAllowed) {
@@ -52,8 +73,12 @@ module.exports = {
     await interaction.reply(INTERACTION_MESSAGE.START_PROCESS);
     const sheetContents = parseRebelsList(rebelsList);
     const sheet = await initializeSheet();
-    const rlSheet = sheet.sheetsByTitle[TRACK_REBELS.SHEET];
-    await rlSheet.clear(TRACK_REBELS.RANGE);
+    const weeklyData = sheet.sheetsByTitle[TRACK_REBELS.REBEL_DATA]
+    const secondRow = await weeklyData.getRows({offset: 1})
+    console.log(secondRow[0].length)
+    console.log(rows[0])
+    // const rlSheet = sheet.sheetsByTitle[TRACK_REBELS.SHEET];
+    // await rlSheet.clear(TRACK_REBELS.RANGE);
     // Remove header as already existing in the sheet
     sheetContents.shift();
     await rlSheet.addRows(sheetContents);
