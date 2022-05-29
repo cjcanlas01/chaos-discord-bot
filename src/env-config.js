@@ -8,4 +8,7 @@ module.exports = {
   BOT_NAME: process.env.BOT_NAME,
   BOT_HELP_COMMAND: process.env.BOT_HELP_COMMAND,
   NODE_ENV: process.env.NODE_ENV,
+  GOOGLE_SPREADSHEET_URL: process.env.GOOGLE_SPREADSHEET_URL,
+  GOOGLE_SERVICE_ACCOUNT_EMAIL: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+  GOOGLE_PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
 };
