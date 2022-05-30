@@ -76,9 +76,9 @@ const updateMemberDataCells = async (sheet, data) => {
 const getRangeStart = async (sheet) => {
   await sheet.loadCells({ startRowIndex: 2 });
   for (let i = 0; i < 18278; i++) {
-    const val = await sheet.getCell(2, i).value;
-    if (String(val) == "0") {
-      return i + 1;
+    const val = await sheet.getCell(1, i).value;
+    if (String(val) == null) {
+      return i - 1;
     }
   }
 };
