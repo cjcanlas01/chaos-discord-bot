@@ -1,19 +1,24 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const Interaction = require("../utils/interaction");
 const Papa = require("papaparse");
-const fs = require("fs");
 const path = require("path");
 const { initializeSheet } = require("../utils/google-spreadsheet");
 const { getConfigs } = require("../config");
 const { postSelf, checkIfUserIsAllowed } = require("../utils/utils");
-const FTP = require("ftp");
-const c = new FTP();
+const { getFile } = require("../utils/ftp");
+const { FTP_HOST } = require("../env-config");
 
+const REBELS_CSV_PATH = path.resolve(__dirname, "../../rebels.csv");
+const REBELS_CSV_FILE = `/${FTP_HOST}/rebels.csv`;
 const INTERACTION_MESSAGE = {
   START_PROCESS: "I'm working on it! Please wait...",
   END_PROCESS: "Rebels list updated!",
 };
 
+/**
+ * Remove colon (;) and empty string ("") from csv
+ * @param {string} csv
+ */
 const parseRebelsList = (csv) => {
   const { data } = Papa.parse(csv, { skipEmptyLines: true });
   return data.map((rows) => {
@@ -23,32 +28,11 @@ const parseRebelsList = (csv) => {
   });
 };
 
-const getRebelsCSV = (path) => {
-  const csvPath = path.resolve(__dirname, "../../rebels.csv");
-  return fs.readFileSync(csvPath, "utf8");
-};
-
-const getRebelsCSV_FTP = (path) => {
-  const csvPath = path.resolve(__dirname, "../../rebels.csv");
-  c.connect({
-    host: "mad.psykoral.com",
-    user: "madgotwic",
-    password: "Ai7USLJ3",
-  });
-
-  c.on("ready", function () {
-    c.get("/mad.psykoral.com/rebels.csv", function (err, stream) {
-      if (err) throw err;
-      stream.once("close", function () {
-        c.end();
-      });
-      stream.pipe(fs.createWriteStream(csvPath));
-    });
-  });
-
-  return fs.readFileSync(csvPath, "utf8");
-};
-
+/**
+ * @param {object} sheet
+ * @param {integer} column
+ * @param {array} data
+ */
 const updateWeeklyContributionCells = async (sheet, column, data) => {
   await sheet.loadCells();
   for (let r = 0; r < 100; r++) {
@@ -65,6 +49,10 @@ const updateWeeklyContributionCells = async (sheet, column, data) => {
   await sheet.saveUpdatedCells();
 };
 
+/**
+ * @param {object} sheet
+ * @param {array} data
+ */
 const updateMemberDataCells = async (sheet, data) => {
   await sheet.loadCells();
   const temp = [...data];
@@ -82,8 +70,17 @@ const updateMemberDataCells = async (sheet, data) => {
       }
     }
   }
-
   await sheet.saveUpdatedCells();
+};
+
+const getRangeStart = async (sheet) => {
+  await sheet.loadCells({ startRowIndex: 2 });
+  for (let i = 0; i < 18278; i++) {
+    const val = await sheet.getCell(2, i).value;
+    if (String(val) == "0") {
+      return i + 1;
+    }
+  }
 };
 
 module.exports = {
@@ -93,7 +90,7 @@ module.exports = {
   async execute(interaction) {
     const action = new Interaction(interaction);
     const { TRACK_REBELS } = await getConfigs();
-    const rebelsList = getRebelsCSV_FTP(path);
+    const rebelsList = await getFile(REBELS_CSV_FILE, REBELS_CSV_PATH);
     const isUserAllowed = await checkIfUserIsAllowed(action);
 
     if (!isUserAllowed) {
@@ -112,11 +109,13 @@ module.exports = {
     await interaction.reply(INTERACTION_MESSAGE.START_PROCESS);
     const rebelData = parseRebelsList(rebelsList);
     const sheet = await initializeSheet();
-    const weeklyData = sheet.sheetsByTitle[TRACK_REBELS.REBEL_DATA];
-    const memberData = sheet.sheetsByTitle[TRACK_REBELS.MEMBER_DATA];
-    const secondRow = await weeklyData.getRows({ offset: 0, limit: 1 });
-    const rangeStart = secondRow[0]._rawData.length - TRACK_REBELS.WEEK_RANGE;
-
+    const { REBEL_DATA, MEMBER_DATA, WEEK_RANGE } = TRACK_REBELS;
+    // Get sheets by title
+    const weeklyData = sheet.sheetsByTitle[REBEL_DATA];
+    const memberData = sheet.sheetsByTitle[MEMBER_DATA];
+    // Get range for weekly data sheet
+    const rangeStart = (await getRangeStart(weeklyData)) - WEEK_RANGE;
+    // Remove header from csv source as existing already in GoogleSpreadsheet
     rebelData.shift();
     await updateWeeklyContributionCells(weeklyData, rangeStart, rebelData);
     await updateMemberDataCells(memberData, rebelData);

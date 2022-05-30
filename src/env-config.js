@@ -11,4 +11,7 @@ module.exports = {
   GOOGLE_SPREADSHEET_URL: process.env.GOOGLE_SPREADSHEET_URL,
   GOOGLE_SERVICE_ACCOUNT_EMAIL: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
   GOOGLE_PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+  FTP_HOST: process.env.FTP_HOST,
+  FTP_USER: process.env.FTP_USER,
+  FTP_PASSWORD: process.env.FTP_PASSWORD,
 };
