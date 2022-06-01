@@ -118,8 +118,8 @@ module.exports = {
     const { TRACK_REBELS } = await getConfigs();
     const rebelsList = await getFileIfExists(REBELS_CSV_FILE, REBELS_CSV_PATH);
     const isUserAllowed = await checkIfUserIsAllowed(action);
-
-    await interaction.reply("Checking permissions");
+    await interaction.deferReply();
+    await interaction.editReply("Checking permissions");
     if (!isUserAllowed) {
       await interaction.editReply({
         content: "Warning! You have no permission for this command.",
