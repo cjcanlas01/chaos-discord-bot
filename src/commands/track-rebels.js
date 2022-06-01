@@ -4,8 +4,8 @@ const Papa = require("papaparse");
 const path = require("path");
 const { initializeSheet } = require("../utils/google-spreadsheet");
 const { getConfigs } = require("../config");
-const { postSelf, checkIfUserIsAllowed } = require("../utils/utils");
-const { getFile } = require("../utils/ftp");
+const { checkIfUserIsAllowed } = require("../utils/utils");
+const { getFileIfExists } = require("../utils/ftp");
 const { FTP_HOST } = require("../env-config");
 
 const REBELS_CSV_PATH = path.resolve(__dirname, "../../rebels.csv");
@@ -74,11 +74,11 @@ const updateMemberDataCells = async (sheet, data) => {
 };
 
 const getRangeStart = async (sheet) => {
-  await sheet.loadCells({ startRowIndex: 2 });
+  await sheet.loadCells({ startRowIndex: 1 });
   for (let i = 0; i < 18278; i++) {
     const val = await sheet.getCell(1, i).value;
-    if (String(val) == null) {
-      return i - 1;
+    if (String(val) == "null") {
+      return i;
     }
   }
 };
@@ -90,7 +90,7 @@ module.exports = {
   async execute(interaction) {
     const action = new Interaction(interaction);
     const { TRACK_REBELS } = await getConfigs();
-    const rebelsList = await getFile(REBELS_CSV_FILE, REBELS_CSV_PATH);
+    const rebelsList = await getFileIfExists(REBELS_CSV_FILE, REBELS_CSV_PATH);
     const isUserAllowed = await checkIfUserIsAllowed(action);
 
     if (!isUserAllowed) {
@@ -101,13 +101,13 @@ module.exports = {
       return;
     }
 
-    if (!rebelsList) {
-      postSelf("No file found!");
+    if (!rebelsList.exists) {
+      await interaction.reply("Rebel list is not found!");
       return;
     }
 
     await interaction.reply(INTERACTION_MESSAGE.START_PROCESS);
-    const rebelData = parseRebelsList(rebelsList);
+    const rebelData = parseRebelsList(rebelsList.file);
     const sheet = await initializeSheet();
     const { REBEL_DATA, MEMBER_DATA, WEEK_RANGE } = TRACK_REBELS;
     // Get sheets by title
