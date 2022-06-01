@@ -5,6 +5,10 @@ const ftp = new FTP();
 
 const DELAY = 2500;
 
+/**
+ * @param {string} remoteFile
+ * @param {string} localFilePath
+ */
 const getFileFromFTP = (remoteFile, localFilePath) => {
   ftp.connect({
     host: FTP_HOST,
@@ -21,6 +25,11 @@ const getFileFromFTP = (remoteFile, localFilePath) => {
   });
 };
 
+/**
+ * @param {string} remoteFile
+ * @param {string} localFilePath
+ * @returns {object}
+ */
 const getFileIfExists = (remoteFile, localFilePath) => {
   return new Promise((resolve, reject) => {
     getFileFromFTP(remoteFile, localFilePath);
@@ -34,7 +43,6 @@ const getFileIfExists = (remoteFile, localFilePath) => {
           resolve({
             exists: true,
             file: fs.readFileSync(localFilePath, "utf8"),
-            createdAt: stat.birthtime,
           });
         }
       });

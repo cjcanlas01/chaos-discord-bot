@@ -7,6 +7,7 @@ const { getConfigs } = require("../config");
 const { checkIfUserIsAllowed } = require("../utils/utils");
 const { getFileIfExists } = require("../utils/ftp");
 const { FTP_HOST } = require("../env-config");
+const keyv = require("../utils/keyv");
 
 const REBELS_CSV_PATH = path.resolve(__dirname, "../../rebels.csv");
 const REBELS_CSV_FILE = `/${FTP_HOST}/rebels.csv`;
@@ -18,6 +19,7 @@ const INTERACTION_MESSAGE = {
 /**
  * Remove colon (;) and empty string ("") from csv
  * @param {string} csv
+ * @returns {array}
  */
 const parseRebelsList = (csv) => {
   const { data } = Papa.parse(csv, { skipEmptyLines: true });
@@ -73,6 +75,10 @@ const updateMemberDataCells = async (sheet, data) => {
   await sheet.saveUpdatedCells();
 };
 
+/**
+ * @param {object} sheet
+ * @returns {integer}
+ */
 const getRangeStart = async (sheet) => {
   await sheet.loadCells({ startRowIndex: 1 });
   for (let i = 0; i < 18278; i++) {
@@ -80,6 +86,26 @@ const getRangeStart = async (sheet) => {
     if (String(val) == "null") {
       return i;
     }
+  }
+};
+
+/**
+ * @param {array} fileContents
+ * @returns {boolean}
+ */
+const identifyFileContents = async (fileContents) => {
+  const key = "REBEL_CSV_CONTENT",
+    content = await keyv.get(key);
+  if (content == undefined) {
+    await keyv.set(key, fileContents);
+  } else {
+    // Check if file content is same or old than the current one
+    const newContent = JSON.stringify(fileContents);
+    if (content.trim() === newContent.trim()) {
+      return false;
+    }
+    await keyv.set(key, newContent);
+    return true;
   }
 };
 
@@ -102,7 +128,14 @@ module.exports = {
     }
 
     if (!rebelsList.exists) {
-      await interaction.reply("Rebel list is not found!");
+      await interaction.reply("Rebels list is not found!");
+      return;
+    }
+
+    if (!(await identifyFileContents(rebelsList.file))) {
+      await interaction.reply(
+        "Rebels list source is not updated! Please upload an updated one."
+      );
       return;
     }
 
