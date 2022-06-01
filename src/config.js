@@ -52,6 +52,5 @@ const getConfigs = async () => {
 };
 
 module.exports = {
-  checkIfConfigFileExists,
   getConfigs,
 };
