@@ -119,21 +119,24 @@ module.exports = {
     const rebelsList = await getFileIfExists(REBELS_CSV_FILE, REBELS_CSV_PATH);
     const isUserAllowed = await checkIfUserIsAllowed(action);
 
+    await interaction.reply("Checking permissions");
     if (!isUserAllowed) {
-      await interaction.reply({
+      await interaction.editReply({
         content: "Warning! You have no permission for this command.",
         ephemeral: true,
       });
       return;
     }
 
+    await interaction.editReply("Obtaining rebel list file...");
     if (!rebelsList.exists) {
-      await interaction.reply("Rebels list is not found!");
+      await interaction.editReply("Rebels list is not found!");
       return;
     }
 
+    await interaction.editReply("Checking if data is up to date...");
     if (!(await identifyFileContents(rebelsList.file))) {
-      await interaction.reply(
+      await interaction.editReply(
         "Rebels list source is not updated! Please upload an updated one."
       );
       return;
