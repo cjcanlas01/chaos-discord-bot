@@ -114,13 +114,11 @@ module.exports = {
     .setName("track-rebels")
     .setDescription("Track rebel leaders."),
   async execute(interaction) {
-    console.log(Date.now(), "Start function call");
     await interaction.deferReply();
     const action = new Interaction(interaction);
     const { TRACK_REBELS } = await getConfigs();
     const rebelsList = await getFileIfExists(REBELS_CSV_FILE, REBELS_CSV_PATH);
     const isUserAllowed = await checkIfUserIsAllowed(action);
-    console.log(Date.now(), isUserAllowed, rebelsList.file);
 
     if (!isUserAllowed) {
       await interaction.editReply({
