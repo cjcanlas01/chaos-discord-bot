@@ -8,7 +8,6 @@ const { checkIfUserIsAllowed } = require("../utils/utils");
 const { getFileIfExists } = require("../utils/ftp");
 const { FTP_HOST } = require("../env-config");
 const keyv = require("../utils/keyv");
-const { time } = require("console");
 
 const REBELS_CSV_PATH = path.resolve(__dirname, "../../rebels.csv");
 const REBELS_CSV_FILE = `/${FTP_HOST}/rebels.csv`;
