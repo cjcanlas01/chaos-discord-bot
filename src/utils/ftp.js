@@ -25,6 +25,32 @@ const getFileFromFTP = (remoteFile, localFilePath) => {
   });
 };
 
+
+/**
+ * @param {string} remoteDir
+ * @param {string} localDirPath
+ */
+const getFilesFromDirectoryFTP = (remoteDir, localDirPath) => {
+  ftp.connect({
+    host: FTP_HOST,
+    user: FTP_USER,
+    password: FTP_PASSWORD,
+  });
+
+  ftp.on("ready", () => {
+    ftp.list(remoteDir, async (err, files) => {
+      if (err) return;
+      files.forEach(f => {
+        ftp.get(remoteDir + f.name, async (err, stream) => {
+          if (err) return;
+          stream.once("close", () => ftp.end());
+          stream.pipe(fs.createWriteStream(localDirPath + f.name));
+        });
+      })
+    });
+  });
+}
+
 /**
  * @param {string} remoteFile
  * @param {string} localFilePath
@@ -53,4 +79,5 @@ const getFileIfExists = (remoteFile, localFilePath) => {
 module.exports = {
   getFileFromFTP,
   getFileIfExists,
+  getFilesFromDirectoryFTP,
 };
