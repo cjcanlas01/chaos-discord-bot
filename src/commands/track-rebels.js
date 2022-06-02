@@ -114,12 +114,14 @@ module.exports = {
     .setName("track-rebels")
     .setDescription("Track rebel leaders."),
   async execute(interaction) {
+    console.log(Date.now(), "Start function call");
+    await interaction.deferReply();
     const action = new Interaction(interaction);
     const { TRACK_REBELS } = await getConfigs();
     const rebelsList = await getFileIfExists(REBELS_CSV_FILE, REBELS_CSV_PATH);
     const isUserAllowed = await checkIfUserIsAllowed(action);
-    await interaction.deferReply();
-    await interaction.editReply("Checking permissions");
+    console.log(Date.now(), isUserAllowed, rebelsList.file);
+
     if (!isUserAllowed) {
       await interaction.editReply({
         content: "Warning! You have no permission for this command.",
@@ -128,13 +130,11 @@ module.exports = {
       return;
     }
 
-    await interaction.editReply("Obtaining rebel list file...");
     if (!rebelsList.exists) {
       await interaction.editReply("Rebels list is not found!");
       return;
     }
 
-    await interaction.editReply("Checking if data is up to date...");
     if (!(await identifyFileContents(rebelsList.file))) {
       await interaction.editReply(
         "Rebels list source is not updated! Please upload an updated one."
@@ -142,7 +142,7 @@ module.exports = {
       return;
     }
 
-    await interaction.reply(INTERACTION_MESSAGE.START_PROCESS);
+    await interaction.editReply(INTERACTION_MESSAGE.START_PROCESS);
     const rebelData = parseRebelsList(rebelsList.file);
     const sheet = await initializeSheet();
     const { REBEL_DATA, MEMBER_DATA, WEEK_RANGE } = TRACK_REBELS;
