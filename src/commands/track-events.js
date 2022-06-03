@@ -5,7 +5,7 @@ const path = require("path");
 const { initializeSheet } = require("../utils/google-spreadsheet");
 const { getConfigs } = require("../config");
 const { checkIfUserIsAllowed } = require("../utils/utils");
-const { getFileIfExists } = require("../utils/ftp");
+const { getFilesFromDirectoryFTP } = require("../utils/ftp");
 const { FTP_HOST } = require("../env-config");
 const keyv = require("../utils/keyv");
 const fs = require("fs");
@@ -90,7 +90,6 @@ module.exports = {
         console.log(Date.now(), "Start function call");
         await interaction.deferReply();
         const action = new Interaction(interaction);
-        
         const isUserAllowed = await checkIfUserIsAllowed(action);
         if (!isUserAllowed) {
             await interaction.editReply({
