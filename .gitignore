@@ -3,3 +3,11 @@ node_modules
 config.json
 src/database/config/database.json
 rebels.csv
+/local.env
+.sequelizerc
+package-lock.json
+package.json
+.idea/chaos-discord-bot.iml
+.idea/jsLibraryMappings.xml
+.idea/modules.xml
+.idea/vcs.xml
