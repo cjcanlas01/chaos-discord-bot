@@ -140,10 +140,17 @@ const postWithMentions = (interaction, postContent) => {
  */
 const postWithFiles = (interaction, postContent) => {
   const { content, files } = postContent;
-  interaction.reply({
-    files,
-    content,
-  });
+  if (interaction.deferred) {
+    interaction.editReply({
+      files,
+      content,
+    })
+  } else {
+    interaction.reply({
+      files,
+      content,
+    });
+  }
 };
 
 /**

@@ -8,6 +8,8 @@ const { checkIfUserIsAllowed } = require("../utils/utils");
 const { getFileIfExists } = require("../utils/ftp");
 const { FTP_HOST } = require("../env-config");
 const keyv = require("../utils/keyv");
+const { GoogleSpreadsheet } = require("google-spreadsheet");
+const { GoogleSpreadsheetWorksheet } = require("google-spreadsheet");
 
 const REBELS_CSV_PATH = path.resolve(__dirname, "../../rebels.csv");
 const REBELS_CSV_FILE = `/${FTP_HOST}/rebels.csv`;
@@ -52,7 +54,7 @@ const updateWeeklyContributionCells = async (sheet, column, data) => {
 };
 
 /**
- * @param {object} sheet
+ * @param {GoogleSpreadsheetWorksheet} sheet
  * @param {array} data
  */
 const updateMemberDataCells = async (sheet, data) => {

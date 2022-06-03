@@ -19,14 +19,15 @@
     "@keyv/mysql": "^1.1.4",
     "axios": "^0.24.0",
     "discord.js": "^13.7.0",
+    "dotenv": "^10.0.0",
+    "ftp": "^0.3.10",
     "google-spreadsheet": "^3.3.0",
     "keyv": "^4.0.3",
+    "lossless-json": "^1.0.5",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.0",
-    "sequelize": "^6.6.5",
-    "dotenv": "^10.0.0",
     "papaparse": "^5.3.2",
-    "ftp": "^0.3.10"
+    "sequelize": "^6.6.5"
   },
   "devDependencies": {
     "dotenv": "^10.0.0",

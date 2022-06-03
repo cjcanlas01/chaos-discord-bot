@@ -12,3 +12,4 @@ package.json
 .idea/modules.xml
 .idea/vcs.xml
 .idea/workspace.xml
+src/database/config/database.json
