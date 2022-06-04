@@ -3,6 +3,6 @@ node_modules
 config.json
 src/database/config/database.json
 data/REBELS/rebels.csv
-data/AC/*
-data/SOW/*
+data/AC/*.txt
+data/SOW/*.txt
 
