@@ -24,17 +24,18 @@ const getFilesForEvent = async (eventName) => {
   await getFilesFromDirectoryFTP(remoteDir, localDir);
 
   let filenames = await fs.promises.readdir(localDir);
-
-  return filenames.map((filename) => ({
-    name: filename,
-    start: parseInt(filename.split(".")[0].split("-")[0]),
-    end: parseInt(filename.split(".")[0].split("-")[1]),
-    alliance: filename.split(".")[0].split("-")[2],
-    type: filename.split(".")[0].split("-")[3],
-    ranking: LosslessJSON.parse(
-      fs.readFileSync(localDir + filename, "utf-8").slice(1)
-    ),
-  }));
+  return filenames
+    .filter((file) => file != ".gitignore")
+    .map((filename) => ({
+      name: filename,
+      start: parseInt(filename.split(".")[0].split("-")[0]),
+      end: parseInt(filename.split(".")[0].split("-")[1]),
+      alliance: filename.split(".")[0].split("-")[2],
+      type: filename.split(".")[0].split("-")[3],
+      ranking: LosslessJSON.parse(
+        fs.readFileSync(localDir + filename, "utf-8").slice(1)
+      ),
+    }));
 };
 
 const mergeFilesForEvent = async (eventName) => {
