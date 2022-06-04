@@ -8,10 +8,8 @@ const { checkIfUserIsAllowed } = require("../utils/utils");
 const { getFileIfExists } = require("../utils/ftp");
 const { FTP_HOST } = require("../env-config");
 const keyv = require("../utils/keyv");
-const { GoogleSpreadsheet } = require("google-spreadsheet");
-const { GoogleSpreadsheetWorksheet } = require("google-spreadsheet");
 
-const REBELS_CSV_PATH = path.resolve(__dirname, "../../rebels.csv");
+const REBELS_CSV_PATH = path.resolve(__dirname, "../../data/REBELS/rebels.csv");
 const REBELS_CSV_FILE = `/${FTP_HOST}/rebels.csv`;
 const INTERACTION_MESSAGE = {
   START_PROCESS: "I'm working on it! Please wait...",
